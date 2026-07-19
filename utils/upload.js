@@ -8,19 +8,24 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: 'amihan-cove/rooms',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
-    // keep uploaded photos to a sane max size instead of storing giant originals
-    transformation: [{ width: 1600, height: 1600, crop: 'limit' }],
-  },
-});
+function makeUpload(folder) {
+  const storage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+      folder: `amihan-cove/${folder}`,
+      allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+      // keep uploaded photos to a sane max size instead of storing giant originals
+      transformation: [{ width: 1600, height: 1600, crop: 'limit' }],
+    },
+  });
 
-const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
-});
+  return multer({
+    storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  });
+}
 
-module.exports = { upload, cloudinary };
+const upload = makeUpload('rooms');
+const blogUpload = makeUpload('blog');
+
+module.exports = { upload, blogUpload, cloudinary };

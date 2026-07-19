@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Dashboard — Amihan Cove Admin</title>
+<title>Admin - Dumaluan Beach Resort I</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/admin.css">
@@ -13,9 +13,10 @@
 <div class="admin-shell">
 
   <aside class="admin-sidebar">
-    <p class="login-brand">Amihan Cove</p>
+    <p class="login-brand">Dumaluan Beach Resort I</p>
     <nav class="sidebar-nav">
       <button class="sidebar-link is-active" data-panel="rooms">Rooms</button>
+      <button class="sidebar-link" data-panel="posts">Blog Posts</button>
       <button class="sidebar-link" data-panel="inquiries">Inquiries</button>
       <button class="sidebar-link" data-panel="users">Users</button>
     </nav>
@@ -45,6 +46,28 @@
           </thead>
           <tbody id="roomsTableBody">
             <tr><td colspan="7" class="muted-row">Loading rooms…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ BLOG POSTS PANEL ============ -->
+    <section class="panel" id="panel-posts">
+      <div class="panel-head">
+        <div>
+          <h1>Blog Posts</h1>
+          <p>Create and manage stories that appear on the public blog pages.</p>
+        </div>
+        <button class="btn btn-coral" id="newPostBtn">+ Add post</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="admin-table" id="postsTable">
+          <thead>
+            <tr><th>Photo</th><th>Title</th><th>Category</th><th>Author</th><th>Status</th><th></th></tr>
+          </thead>
+          <tbody id="postsTableBody">
+            <tr><td colspan="6" class="muted-row">Loading posts...</td></tr>
           </tbody>
         </table>
       </div>
@@ -94,6 +117,36 @@
     </section>
 
   </main>
+</div>
+
+<!-- ============ BLOG POST MODAL ============ -->
+<div class="modal-overlay" id="postModalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="postModalTitle">Add post</h2>
+      <button class="modal-close" data-close="postModalOverlay">&times;</button>
+    </div>
+    <form id="postForm" enctype="multipart/form-data">
+      <input type="hidden" name="id" id="postId">
+      <label>Title<input type="text" name="title" id="postTitle" required placeholder="A sunrise weekend at the cove"></label>
+      <div class="form-row">
+        <label>Category<input type="text" name="category" id="postCategory" placeholder="Travel, Resort News"></label>
+        <label>Author<input type="text" name="author" id="postAuthor" placeholder="Amihan Cove"></label>
+      </div>
+      <label>Excerpt<textarea name="excerpt" id="postExcerpt" rows="3" required placeholder="Short summary shown on the blog list."></textarea></label>
+      <label>Content<textarea name="content" id="postContent" rows="7" required placeholder="Write the full blog post here."></textarea></label>
+      <label class="checkbox-row"><input type="checkbox" name="published" id="postPublished" checked> Published on blog</label>
+      <label>Featured photo
+        <input type="file" name="image" id="postImage" accept="image/png,image/jpeg,image/webp,image/gif">
+      </label>
+      <img id="postImagePreview" class="image-preview" alt="" hidden>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-muted" data-close="postModalOverlay">Cancel</button>
+        <button type="submit" class="btn btn-coral">Save post</button>
+      </div>
+      <p class="form-error" id="postFormError"></p>
+    </form>
+  </div>
 </div>
 
 <!-- ============ ROOM MODAL ============ -->

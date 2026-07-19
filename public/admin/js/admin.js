@@ -184,6 +184,133 @@ function initDashboard() {
   });
 
   // =====================================================
+  // BLOG POSTS
+  // =====================================================
+  const postModalOverlay = document.getElementById('postModalOverlay');
+  const postForm = document.getElementById('postForm');
+  const postFormError = document.getElementById('postFormError');
+  const postImageInput = document.getElementById('postImage');
+  const postImagePreview = document.getElementById('postImagePreview');
+
+  document.getElementById('newPostBtn').addEventListener('click', () => {
+    postForm.reset();
+    document.getElementById('postId').value = '';
+    document.getElementById('postModalTitle').textContent = 'Add post';
+    document.getElementById('postPublished').checked = true;
+    postImagePreview.hidden = true;
+    postFormError.textContent = '';
+    openModal(postModalOverlay);
+  });
+
+  postImageInput.addEventListener('change', () => {
+    const file = postImageInput.files[0];
+    if (!file) { postImagePreview.hidden = true; return; }
+    postImagePreview.src = URL.createObjectURL(file);
+    postImagePreview.hidden = false;
+  });
+
+  async function loadPostsTable() {
+    const tbody = document.getElementById('postsTableBody');
+    tbody.innerHTML = '<tr><td colspan="6" class="muted-row">Loading posts...</td></tr>';
+    try {
+      const res = await handleAuthedFetch('/api/blog-posts/admin/all');
+      const posts = await res.json();
+      if (!res.ok) throw new Error(posts.message || 'Could not load posts.');
+      if (!posts.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="muted-row">No blog posts yet - click "Add post" to publish the first story.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = posts.map(postRowHTML).join('');
+      posts.forEach((post) => {
+        document.querySelector(`[data-edit-post="${post._id}"]`)?.addEventListener('click', () => openPostForEdit(post));
+        document.querySelector(`[data-delete-post="${post._id}"]`)?.addEventListener('click', () => deletePost(post._id, post.title));
+      });
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="6" class="muted-row">Couldn't load posts: ${err.message}</td></tr>`;
+    }
+  }
+
+  function postRowHTML(post) {
+    const thumb = post.image
+      ? `<img class="thumb" src="${post.image}" alt="">`
+      : `<span class="thumb-empty" title="No photo uploaded"></span>`;
+    const status = post.published
+      ? '<span class="badge badge-available">Published</span>'
+      : '<span class="badge badge-unavailable">Draft</span>';
+    return `
+      <tr>
+        <td>${thumb}</td>
+        <td>
+          <strong>${escapeHtml(post.title)}</strong>
+          <span class="subtext">${formatDate(post.createdAt)}</span>
+        </td>
+        <td>${escapeHtml(post.category || '')}</td>
+        <td>${escapeHtml(post.author || '')}</td>
+        <td>${status}</td>
+        <td>
+          <div class="row-actions">
+            <button data-edit-post="${post._id}">Edit</button>
+            <button class="danger" data-delete-post="${post._id}">Delete</button>
+          </div>
+        </td>
+      </tr>`;
+  }
+
+  function openPostForEdit(post) {
+    document.getElementById('postModalTitle').textContent = 'Edit post';
+    document.getElementById('postId').value = post._id;
+    document.getElementById('postTitle').value = post.title;
+    document.getElementById('postCategory').value = post.category || '';
+    document.getElementById('postAuthor').value = post.author || '';
+    document.getElementById('postExcerpt').value = post.excerpt || '';
+    document.getElementById('postContent').value = post.content || '';
+    document.getElementById('postPublished').checked = !!post.published;
+    if (post.image) {
+      postImagePreview.src = post.image;
+      postImagePreview.hidden = false;
+    } else {
+      postImagePreview.hidden = true;
+    }
+    postImageInput.value = '';
+    postFormError.textContent = '';
+    openModal(postModalOverlay);
+  }
+
+  async function deletePost(id, title) {
+    if (!confirm(`Delete blog post "${title}"? This can't be undone.`)) return;
+    try {
+      const res = await handleAuthedFetch(`/api/blog-posts/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Could not delete post.');
+      loadPostsTable();
+    } catch (err) {
+      alert(`Couldn't delete post: ${err.message}`);
+    }
+  }
+
+  postForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    postFormError.textContent = '';
+    const id = document.getElementById('postId').value;
+    const formData = new FormData(postForm);
+    formData.set('published', document.getElementById('postPublished').checked ? 'true' : 'false');
+    if (!postImageInput.files[0]) formData.delete('image');
+
+    try {
+      const res = await handleAuthedFetch(id ? `/api/blog-posts/${id}` : '/api/blog-posts', {
+        method: id ? 'PUT' : 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Could not save post.');
+      closeModal(postModalOverlay);
+      loadPostsTable();
+    } catch (err) {
+      postFormError.textContent = err.message;
+    }
+  });
+
+  // =====================================================
   // INQUIRIES
   // =====================================================
   async function loadInquiriesTable() {
@@ -360,6 +487,7 @@ function initDashboard() {
   }
 
   loadRoomsTable();
+  loadPostsTable();
   loadInquiriesTable();
   loadUsersTable();
 }

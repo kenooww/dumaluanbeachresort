@@ -25,6 +25,16 @@
     <link rel="stylesheet" href="css/slicknav.css">
     <link rel="stylesheet" href="css/style.css">
     <!-- <link rel="stylesheet" href="css/responsive.css"> -->
+     <style>
+    @keyframes sectionHighlight {
+    0%   { background-color: rgba(255, 193, 7, 0.25); }
+    100% { background-color: transparent; }
+    }
+
+    .scroll-highlight {
+    animation: sectionHighlight 1.2s ease-out;
+    }
+    </style>
 </head>
 
 <body>
@@ -42,22 +52,12 @@
                             <div class="main-menu  d-none d-lg-block">
                                 <nav>
                                     <ul id="navigation">
-                                        <li><a class="active" href="index.html">home</a></li>
-                                        <li><a href="rooms.html">rooms</a></li>
-                                        <li><a href="about.html">About</a></li>
-                                        <li><a href="#">blog <i class="ti-angle-down"></i></a>
-                                            <ul class="submenu">
-                                                <li><a href="blog.html">blog</a></li>
-                                                <li><a href="single-blog.html">single-blog</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="#">pages <i class="ti-angle-down"></i></a>
-                                            <ul class="submenu">
-                                                <li><a href="elements.html">elements</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="contact.html">Contact</a></li>
-                                    </ul>
+                                      <li><a href="index.html">home</a></li>
+                                      <li><a href="#about_us" class="scroll-link">About</a></li>
+                                      <li><a href="#features_room" class="scroll-link">rooms</a></li>
+                                      <li><a href="blog.html">Blog</a></li>
+                                      <li><a href="#contact" class="scroll-link">Contact</a></li>
+                                  </ul>
                                 </nav>
                             </div>
                         </div>
@@ -158,7 +158,7 @@
     <!-- slider_area_end -->
 
     <!-- about_area_start -->
-    <div class="about_area">
+    <div class="about_area" id="about_us">
         <div class="container">
             <div class="row">
                 <div class="col-xl-5 col-lg-5">
@@ -297,7 +297,7 @@
     <!-- about_area_end -->
 
     <!-- features_room_startt -->
-    <div class="features_room">
+    <div class="features_room" id="features_room">
         <div class="container">
             <div class="row">
                 <div class="col-xl-12">
@@ -434,6 +434,73 @@
         </div>
     </div>
     <!-- instragram_area_end -->
+
+      <!-- ================ contact section start ================= -->
+    <section class="contact-section" id="contact">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="contact-title">Get in Touch</h2>
+                    </div>
+                    <div class="col-lg-8">
+                        <!-- action/method removed - the form now submits into MongoDB via
+                             fetch(), handled by the script at the bottom of this page -->
+                        <form class="form-contact contact_form" id="contactForm" novalidate="novalidate">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control w-100" name="message" id="message" cols="30" rows="9" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Message'" placeholder="Enter Message" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control valid" name="name" id="name" type="text" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your name'" placeholder="Enter your name" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control valid" name="email" id="email" type="email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'" placeholder="Email" required>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <input class="form-control" name="subject" id="subject" type="text" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Subject'" placeholder="Enter Subject">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mt-3">
+                                <button type="submit" class="button button-contactForm boxed-btn">Send</button>
+                            </div>
+                            <p id="contactFormMsg" style="margin-top: 12px; font-family: monospace; font-size: 0.85rem;"></p>
+                        </form>
+                    </div>
+                    <div class="col-lg-3 offset-lg-1">
+                        <div class="media contact-info">
+                            <span class="contact-info__icon"><i class="ti-home"></i></span>
+                            <div class="media-body">
+                                <h3>Buttonwood, California.</h3>
+                                <p>Rosemead, CA 91770</p>
+                            </div>
+                        </div>
+                        <div class="media contact-info">
+                            <span class="contact-info__icon"><i class="ti-tablet"></i></span>
+                            <div class="media-body">
+                                <h3>+1 253 565 2365</h3>
+                                <p>Mon to Fri 9am to 6pm</p>
+                            </div>
+                        </div>
+                        <div class="media contact-info">
+                            <span class="contact-info__icon"><i class="ti-email"></i></span>
+                            <div class="media-body">
+                                <h3>support@colorlib.com</h3>
+                                <p>Send us your query anytime!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+    <!-- ================ contact section end ================= -->
 
     <!-- footer -->
     <footer class="footer">
@@ -602,6 +669,13 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
     <script src="js/main.js"></script>
     <script src="js/rooms-dynamic.js"></script>
+
+    <!--contact js-->
+    <script src="js/jquery.ajaxchimp.min.js"></script>
+    <script src="js/jquery.form.js"></script>
+    <script src="js/jquery.validate.min.js"></script>
+
+    <script src="js/main.js"></script>
     <script>
         $('#datepicker').datepicker({
             iconsLibrary: 'fontawesome',
@@ -618,6 +692,67 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         });
     </script>
 
+    <!-- Sends the "Get in Touch" form straight into MongoDB via /api/contact,
+         instead of the template's original contact_process.php (which doesn't exist
+         in this Node/Express + MongoDB app). -->
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            var msgEl = document.getElementById('contactFormMsg');
+            var submitBtn = e.target.querySelector('button[type="submit"]');
+            msgEl.textContent = '';
+            submitBtn.disabled = true;
+
+            var payload = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value,
+            };
+
+            try {
+                var res = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                var data = await res.json();
+                if (!res.ok) throw new Error(data.message || 'Something went wrong.');
+
+                msgEl.style.color = '#3c7a5a';
+                msgEl.textContent = data.message;
+                e.target.reset();
+            } catch (err) {
+                msgEl.style.color = '#e5502f';
+                msgEl.textContent = err.message;
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+     
+
+<script>
+  document.querySelectorAll('a.scroll-link').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (!target) return;
+
+      const headerOffset = document.getElementById('sticky-header')?.offsetHeight || 0;
+      const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
+
+      window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+
+      // Wait roughly until the smooth scroll finishes, then flash the section
+      target.classList.remove('scroll-highlight'); // reset if clicked twice
+      void target.offsetWidth; // force reflow so the animation restarts
+      setTimeout(() => {
+        target.classList.add('scroll-highlight');
+      }, 500);
+    });
+  });
+</script>
 
 
 </body>

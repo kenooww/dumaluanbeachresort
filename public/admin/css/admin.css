@@ -103,6 +103,7 @@ input, select, textarea, button { font-family: var(--font-body); }
 .modal input[type=text], .modal input[type=number], .modal input[type=email], .modal input[type=password], .modal select, .modal textarea {
   font-family: var(--font-body); font-size: 0.95rem; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--cream);
 }
+.form-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .modal .checkbox-row { flex-direction: row; align-items: center; gap: 8px; text-transform: none; letter-spacing: 0; font-family: var(--font-body); color: var(--ink); }
 .image-preview { width: 100%; height: 140px; object-fit: cover; border-radius: 10px; margin-top: -6px; }
 .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px; }
@@ -114,4 +115,5 @@ input, select, textarea, button { font-family: var(--font-body); }
   .sidebar-nav { flex-direction: row; margin-top: 0; }
   .sidebar-foot { flex-direction: row; margin-top: 0; margin-left: auto; }
   .admin-main { padding: 28px 20px; }
+  .form-row { grid-template-columns: 1fr; }
 }
