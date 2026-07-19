@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin login — Amihan Cove</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="login-body">
+
+  <div class="login-card">
+    <p class="login-brand">Amihan Cove</p>
+    <h1>Staff &amp; admin login</h1>
+    <p class="login-sub">Manage rooms, photos and staff accounts.</p>
+
+    <form id="loginForm">
+      <label>Email
+        <input type="email" name="email" required autocomplete="username" placeholder="you@amihancove.com">
+      </label>
+      <label>Password
+        <input type="password" name="password" required autocomplete="current-password" placeholder="••••••••">
+      </label>
+      <button type="submit" class="btn btn-coral btn-block">Log in</button>
+      <p class="login-error" id="loginError"></p>
+    </form>
+
+    <p class="login-hint">First time here? Run <code>npm run seed</code> on the server to create the first admin account.</p>
+    <a class="login-back" href="/">&larr; Back to the resort site</a>
+  </div>
+
+<script src="js/admin.js"></script>
+<script>
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errorEl = document.getElementById('loginError');
+    errorEl.textContent = '';
+    const form = new FormData(e.target);
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.get('email'), password: form.get('password') }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Login failed.');
+      localStorage.setItem('amihan_token', data.token);
+      localStorage.setItem('amihan_user', JSON.stringify(data.user));
+      window.location.href = '/admin/dashboard.html';
+    } catch (err) {
+      errorEl.textContent = err.message;
+    }
+  });
+</script>
+</body>
+</html>

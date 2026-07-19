@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — Amihan Cove Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+<div class="admin-shell">
+
+  <aside class="admin-sidebar">
+    <p class="login-brand">Amihan Cove</p>
+    <nav class="sidebar-nav">
+      <button class="sidebar-link is-active" data-panel="rooms">Rooms</button>
+      <button class="sidebar-link" data-panel="users">Users</button>
+    </nav>
+    <div class="sidebar-foot">
+      <p id="whoAmI" class="who-am-i">—</p>
+      <a href="/" class="sidebar-link-muted">View live site</a>
+      <button id="logoutBtn" class="sidebar-link-muted logout-btn">Log out</button>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+
+    <!-- ============ ROOMS PANEL ============ -->
+    <section class="panel is-active" id="panel-rooms">
+      <div class="panel-head">
+        <div>
+          <h1>Rooms</h1>
+          <p>Create room listings, set pricing, and upload photos guests will see on the live site.</p>
+        </div>
+        <button class="btn btn-coral" id="newRoomBtn">+ Add room</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="admin-table" id="roomsTable">
+          <thead>
+            <tr><th>Photo</th><th>Name</th><th>Type</th><th>Price/night</th><th>Capacity</th><th>Status</th><th></th></tr>
+          </thead>
+          <tbody id="roomsTableBody">
+            <tr><td colspan="7" class="muted-row">Loading rooms…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ USERS PANEL ============ -->
+    <section class="panel" id="panel-users">
+      <div class="panel-head">
+        <div>
+          <h1>Users</h1>
+          <p>Staff and admin accounts that can manage this dashboard.</p>
+        </div>
+        <button class="btn btn-coral" id="newUserBtn">+ Add user</button>
+      </div>
+
+      <div class="table-wrap">
+        <table class="admin-table" id="usersTable">
+          <thead>
+            <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th></th></tr>
+          </thead>
+          <tbody id="usersTableBody">
+            <tr><td colspan="5" class="muted-row">Loading users…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ============ ROOM MODAL ============ -->
+<div class="modal-overlay" id="roomModalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="roomModalTitle">Add room</h2>
+      <button class="modal-close" data-close="roomModalOverlay">&times;</button>
+    </div>
+    <form id="roomForm" enctype="multipart/form-data">
+      <input type="hidden" name="id" id="roomId">
+      <label>Room name<input type="text" name="name" id="roomName" required placeholder="Sunrise Beachfront Bungalow"></label>
+      <label>Room type
+        <select name="type" id="roomType">
+          <option>Beachfront Bungalow</option>
+          <option>Garden Villa</option>
+          <option>Overwater Suite</option>
+          <option>Family Cabana</option>
+          <option>Standard Room</option>
+        </select>
+      </label>
+      <label>Description<textarea name="description" id="roomDescription" rows="3" required placeholder="What makes this room worth booking?"></textarea></label>
+      <div class="form-row">
+        <label>Price per night (USD)<input type="number" name="pricePerNight" id="roomPrice" min="0" step="1" required></label>
+        <label>Capacity (guests)<input type="number" name="capacity" id="roomCapacity" min="1" step="1" required value="2"></label>
+      </div>
+      <label>Amenities <span class="hint">(comma separated)</span>
+        <input type="text" name="amenities" id="roomAmenities" placeholder="Ocean view, Private deck, Free breakfast">
+      </label>
+      <label class="checkbox-row"><input type="checkbox" name="available" id="roomAvailable" checked> Available for booking</label>
+      <label>Room photo
+        <input type="file" name="image" id="roomImage" accept="image/png,image/jpeg,image/webp,image/gif">
+      </label>
+      <img id="roomImagePreview" class="image-preview" alt="" hidden>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-muted" data-close="roomModalOverlay">Cancel</button>
+        <button type="submit" class="btn btn-coral">Save room</button>
+      </div>
+      <p class="form-error" id="roomFormError"></p>
+    </form>
+  </div>
+</div>
+
+<!-- ============ USER MODAL ============ -->
+<div class="modal-overlay" id="userModalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Add user</h2>
+      <button class="modal-close" data-close="userModalOverlay">&times;</button>
+    </div>
+    <form id="userForm">
+      <label>Full name<input type="text" name="name" id="userName" required></label>
+      <label>Email<input type="email" name="email" id="userEmail" required></label>
+      <label>Password <span class="hint">(min 6 characters)</span><input type="password" name="password" id="userPassword" minlength="6" required></label>
+      <label>Role
+        <select name="role" id="userRole">
+          <option value="staff">Staff</option>
+          <option value="admin">Admin</option>
+        </select>
+      </label>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-muted" data-close="userModalOverlay">Cancel</button>
+        <button type="submit" class="btn btn-coral">Save user</button>
+      </div>
+      <p class="form-error" id="userFormError"></p>
+    </form>
+  </div>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>

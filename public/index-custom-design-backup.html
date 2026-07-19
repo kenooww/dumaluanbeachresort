@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Amihan Cove Resort — Trade Winds &amp; Tide Pools</title>
+<meta name="description" content="A barefoot island resort where the trade winds set the schedule. Beachfront bungalows, lagoon villas and overwater suites." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="grain-overlay" aria-hidden="true"></div>
+
+<header class="site-nav" id="siteNav">
+  <div class="nav-inner">
+    <a href="#top" class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="34" height="34"><circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6 22c4-4 8 4 12 0s8-4 12 0s8-4 4-8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </span>
+      Amihan Cove
+    </a>
+    <nav class="nav-links">
+      <a href="#rooms">Stays</a>
+      <a href="#amenities">Amenities</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#booking">Book</a>
+    </nav>
+    <a href="#booking" class="btn btn-coral nav-cta">Check availability</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ============ HERO CAROUSEL ============ -->
+<section class="hero" id="top">
+  <div class="hero-slides" id="heroSlides">
+
+    <article class="hero-slide is-active" data-slide="0">
+      <div class="hero-bg hero-bg--dawn">
+        <svg class="hero-sun" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="60"/></svg>
+        <svg class="hero-waves" viewBox="0 0 1200 220" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0,120 C150,180 300,60 450,120 C600,180 750,60 900,120 C1050,180 1150,90 1200,120 L1200,220 L0,220 Z" class="wave wave-1"/>
+          <path d="M0,150 C150,90 300,190 450,140 C600,90 750,190 900,140 C1050,90 1150,160 1200,140 L1200,220 L0,220 Z" class="wave wave-2"/>
+        </svg>
+        <svg class="hero-palm hero-palm--left" viewBox="0 0 220 320" aria-hidden="true"><path d="M110 320 C110 200 90 160 60 120 C30 80 20 40 40 10 C55 40 60 70 80 95 C90 60 85 30 100 0 C110 35 105 65 120 95 C135 60 150 40 165 15 C175 45 165 75 140 105 C165 100 190 90 210 65 C205 100 175 120 140 130 C110 175 110 250 110 320 Z"/></svg>
+      </div>
+      <div class="hero-copy">
+        <p class="eyebrow">Palawan-adjacent · barefoot luxury</p>
+        <h1>Amihan Cove</h1>
+        <p class="hero-sub">The cool trade wind gives this cove its name — and its pace. Beachfront bungalows, one reef, zero rush.</p>
+        <div class="hero-actions">
+          <a href="#booking" class="btn btn-coral">Check availability</a>
+          <a href="#rooms" class="btn btn-ghost">See the stays</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="hero-slide" data-slide="1">
+      <div class="hero-bg hero-bg--lagoon">
+        <svg class="hero-waves" viewBox="0 0 1200 220" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0,130 C150,70 300,190 450,130 C600,70 750,190 900,130 C1050,70 1150,150 1200,130 L1200,220 L0,220 Z" class="wave wave-1"/>
+          <path d="M0,160 C150,200 300,110 450,160 C600,200 750,110 900,160 C1050,200 1150,130 1200,160 L1200,220 L0,220 Z" class="wave wave-2"/>
+        </svg>
+        <svg class="hero-fish" viewBox="0 0 100 60" aria-hidden="true"><path d="M10 30 C25 10 60 10 80 30 C60 50 25 50 10 30 Z M80 30 L98 18 L92 30 L98 42 Z"/></svg>
+      </div>
+      <div class="hero-copy">
+        <p class="eyebrow">Reef &amp; lagoon</p>
+        <h1>Water you can read</h1>
+        <p class="hero-sub">Glass-calm at dawn, sherbet pink by dusk. The lagoon in front of the villas turns three shades of blue before lunch.</p>
+        <div class="hero-actions">
+          <a href="#booking" class="btn btn-coral">Check availability</a>
+          <a href="#amenities" class="btn btn-ghost">Explore amenities</a>
+        </div>
+      </div>
+    </article>
+
+    <article class="hero-slide" data-slide="2">
+      <div class="hero-bg hero-bg--sunset">
+        <svg class="hero-sun hero-sun--set" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="130" r="70"/></svg>
+        <svg class="hero-birds" viewBox="0 0 300 60" aria-hidden="true">
+          <path d="M20 20 Q30 5 40 20 Q50 5 60 20" />
+          <path d="M100 35 Q110 20 120 35 Q130 20 140 35" />
+          <path d="M190 15 Q200 0 210 15 Q220 0 230 15" />
+        </svg>
+      </div>
+      <div class="hero-copy">
+        <p class="eyebrow">Golden hour, every hour</p>
+        <h1>Dinner faces west</h1>
+        <p class="hero-sub">Every table at the cove-side grill catches the sunset. Reservations are unnecessary — there's a seat for every guest.</p>
+        <div class="hero-actions">
+          <a href="#booking" class="btn btn-coral">Check availability</a>
+          <a href="#gallery" class="btn btn-ghost">View the gallery</a>
+        </div>
+      </div>
+    </article>
+
+  </div>
+
+  <button class="hero-arrow hero-arrow--prev" id="heroPrev" aria-label="Previous slide">&#8249;</button>
+  <button class="hero-arrow hero-arrow--next" id="heroNext" aria-label="Next slide">&#8250;</button>
+
+  <div class="hero-dots" id="heroDots"></div>
+  <a href="#welcome" class="scroll-cue" aria-hidden="true"><span></span>scroll</a>
+</section>
+
+<!-- ============ WELCOME ============ -->
+<section class="welcome" id="welcome">
+  <div class="section-inner welcome-grid">
+    <div class="welcome-text">
+      <p class="eyebrow eyebrow--dark">01 — The cove</p>
+      <h2>A resort built around one tide chart</h2>
+      <p>Amihan Cove sits on a quiet stretch of coastline where the trade winds roll in cool and steady. There's no
+      entertainment schedule here — just a reef at low tide, a hammock at high tide, and a kitchen that cooks whatever
+      the boats brought in that morning.</p>
+      <p>Thirty-two rooms, four room types, one shared shoreline. That's the whole plan.</p>
+    </div>
+    <div class="welcome-stamp" aria-hidden="true">
+      <div class="postmark">
+        <svg viewBox="0 0 160 160">
+          <circle cx="80" cy="80" r="70" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
+          <circle cx="80" cy="80" r="55" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <text x="80" y="70" text-anchor="middle" class="postmark-text">AMIHAN</text>
+          <text x="80" y="90" text-anchor="middle" class="postmark-text">COVE</text>
+          <text x="80" y="108" text-anchor="middle" class="postmark-text postmark-text--small">EST. TIDE 06:14</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <svg class="section-divider" viewBox="0 0 1200 80" preserveAspectRatio="none" aria-hidden="true"><path d="M0,40 C200,0 400,80 600,40 C800,0 1000,80 1200,40 L1200,80 L0,80 Z"/></svg>
+</section>
+
+<!-- ============ ROOMS ============ -->
+<section class="rooms" id="rooms">
+  <div class="section-inner">
+    <p class="eyebrow eyebrow--dark">02 — Stays</p>
+    <h2>Postcards from every room</h2>
+    <p class="section-lede">Live availability and photos, straight from the front desk. Prices are per night, tide included.</p>
+
+    <div class="room-grid" id="roomGrid">
+      <!-- room postcards are rendered here by js/main.js -->
+      <p class="room-loading" id="roomLoading">Fetching today's rooms…</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AMENITIES ============ -->
+<section class="amenities" id="amenities">
+  <div class="section-inner">
+    <p class="eyebrow">03 — On the grounds</p>
+    <h2 class="on-dark">Everything the cove keeps stocked</h2>
+    <div class="amenity-grid">
+      <div class="amenity">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6c8 6 12 14 12 20a12 12 0 0 1-24 0c0-6 4-14 12-20Z"/></svg>
+        <h3>Reef snorkeling</h3>
+        <p>Gear at the boathouse, reef fifty meters from shore, guided trips at dawn.</p>
+      </div>
+      <div class="amenity">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><rect x="8" y="20" width="32" height="6" rx="3"/><circle cx="14" cy="30" r="4"/><circle cx="34" cy="30" r="4"/><path d="M12 20v-6h24v6"/></svg>
+        <h3>Bicycles &amp; kayaks</h3>
+        <p>Free rentals for guests — the village market is a fifteen-minute ride down the coast road.</p>
+      </div>
+      <div class="amenity">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M10 34c4-14 10-22 14-22s10 8 14 22"/><path d="M6 34h36"/></svg>
+        <h3>Cove-side grill</h3>
+        <p>Open-air dinner service facing the sunset; the day's catch decides the menu.</p>
+      </div>
+      <div class="amenity">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="16" r="6"/><path d="M12 40c0-8 5-14 12-14s12 6 12 14"/></svg>
+        <h3>Tide-pool spa</h3>
+        <p>Treatments timed to low tide, in an open pavilion built over the rock pools.</p>
+      </div>
+      <div class="amenity">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 38 L24 10 L40 38 Z"/><path d="M16 30h16"/></svg>
+        <h3>Sailing &amp; boat trips</h3>
+        <p>Half-day trips to the outer islands aboard the resort's two outrigger boats.</p>
+      </div>
+      <div class="amenity">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6v8M24 34v8M6 24h8M34 24h8"/><circle cx="24" cy="24" r="10"/></svg>
+        <h3>Stargazing deck</h3>
+        <p>No light pollution past the tree line — telescopes come out most clear nights.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GALLERY ============ -->
+<section class="gallery" id="gallery">
+  <div class="section-inner">
+    <p class="eyebrow eyebrow--dark">04 — Gallery</p>
+    <h2>Three shades of the cove</h2>
+    <div class="gallery-strip">
+      <figure class="gallery-card gallery-card--dawn">
+        <figcaption>Dawn · 06:14 — low tide, first light on the reef</figcaption>
+      </figure>
+      <figure class="gallery-card gallery-card--midday">
+        <figcaption>Midday — lagoon at its clearest, best for snorkeling</figcaption>
+      </figure>
+      <figure class="gallery-card gallery-card--dusk">
+        <figcaption>Dusk — the grill opens, the sky matches the coral trim</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BOOKING CTA ============ -->
+<section class="booking" id="booking">
+  <div class="section-inner booking-inner">
+    <div>
+      <p class="eyebrow eyebrow--dark">05 — Book direct</p>
+      <h2>Best rate, no middleman</h2>
+      <p>Send the dates and party size below — the front desk replies with a hold within a day, no card required yet.</p>
+    </div>
+    <form class="booking-form" id="bookingForm">
+      <div class="form-row">
+        <label>Check-in<input type="date" name="checkin" required></label>
+        <label>Check-out<input type="date" name="checkout" required></label>
+      </div>
+      <div class="form-row">
+        <label>Guests
+          <select name="guests">
+            <option>1 guest</option><option selected>2 guests</option><option>3 guests</option><option>4+ guests</option>
+          </select>
+        </label>
+        <label>Room type
+          <select name="roomType" id="roomTypeSelect">
+            <option value="">Any</option>
+          </select>
+        </label>
+      </div>
+      <label>Email<input type="email" name="email" placeholder="you@example.com" required></label>
+      <button type="submit" class="btn btn-coral">Request a hold</button>
+      <p class="form-note" id="formNote"></p>
+    </form>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="section-inner footer-grid">
+    <div>
+      <p class="brand brand--footer">Amihan Cove</p>
+      <p>A small resort on a quiet coastline. Book direct for the best rate.</p>
+    </div>
+    <div>
+      <h4>Find us</h4>
+      <p>Sitio Amihan, Coastal Road<br>Palawan-adjacent province, PH</p>
+      <p>+63 917 000 0000<br>stay@amihancove.com</p>
+    </div>
+    <div>
+      <h4>Manage</h4>
+      <p><a href="/admin">Staff &amp; admin login</a></p>
+    </div>
+  </div>
+  <p class="footer-fine">© <span id="year"></span> Amihan Cove Resort. All tides reserved.</p>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
