@@ -184,6 +184,85 @@ function initDashboard() {
   });
 
   // =====================================================
+  // INQUIRIES
+  // =====================================================
+  async function loadInquiriesTable() {
+    const tbody = document.getElementById('inquiriesTableBody');
+    tbody.innerHTML = '<tr><td colspan="6" class="muted-row">Loading inquiries...</td></tr>';
+    try {
+      const res = await handleAuthedFetch('/api/contact');
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Could not load inquiries.');
+      if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="muted-row">No inquiries yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.map(inquiryRowHTML).join('');
+      data.forEach((message) => {
+        document.querySelector(`[data-toggle-inquiry="${message._id}"]`)?.addEventListener('click', () => {
+          updateInquiryStatus(message._id, !message.read);
+        });
+        document.querySelector(`[data-delete-inquiry="${message._id}"]`)?.addEventListener('click', () => {
+          deleteInquiry(message._id, message.name);
+        });
+      });
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="6" class="muted-row">Couldn't load inquiries: ${err.message}</td></tr>`;
+    }
+  }
+
+  function inquiryRowHTML(message) {
+    const status = message.read
+      ? '<span class="badge badge-available">Read</span>'
+      : '<span class="badge badge-unavailable">New</span>';
+    const toggleLabel = message.read ? 'Mark new' : 'Mark read';
+    return `
+      <tr>
+        <td>
+          <strong>${escapeHtml(message.name)}</strong>
+          <span class="subtext">${escapeHtml(message.email)}</span>
+        </td>
+        <td>${escapeHtml(message.subject || 'No subject')}</td>
+        <td class="inquiry-message">${escapeHtml(message.message)}</td>
+        <td>${formatDate(message.createdAt)}</td>
+        <td>${status}</td>
+        <td>
+          <div class="row-actions">
+            <button data-toggle-inquiry="${message._id}">${toggleLabel}</button>
+            <button class="danger" data-delete-inquiry="${message._id}">Delete</button>
+          </div>
+        </td>
+      </tr>`;
+  }
+
+  async function updateInquiryStatus(id, read) {
+    try {
+      const res = await handleAuthedFetch(`/api/contact/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ read }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Could not update inquiry.');
+      loadInquiriesTable();
+    } catch (err) {
+      alert(`Couldn't update inquiry: ${err.message}`);
+    }
+  }
+
+  async function deleteInquiry(id, name) {
+    if (!confirm(`Delete inquiry from "${name}"?`)) return;
+    try {
+      const res = await handleAuthedFetch(`/api/contact/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Could not delete inquiry.');
+      loadInquiriesTable();
+    } catch (err) {
+      alert(`Couldn't delete inquiry: ${err.message}`);
+    }
+  }
+
+  // =====================================================
   // USERS
   // =====================================================
   const userModalOverlay = document.getElementById('userModalOverlay');
@@ -269,6 +348,18 @@ function initDashboard() {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
+  function formatDate(value) {
+    if (!value) return '';
+    return new Intl.DateTimeFormat(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(new Date(value));
+  }
+
   loadRoomsTable();
+  loadInquiriesTable();
   loadUsersTable();
 }

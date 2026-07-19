@@ -7,6 +7,7 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 const roomRoutes = require('./routes/rooms');
 const userRoutes = require('./routes/users');
+const contactRoutes = require('./routes/contact');
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use('/api', async (req, res, next) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Serve the public website + admin dashboard
 app.use(express.static(path.join(__dirname, 'public')));

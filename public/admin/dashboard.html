@@ -16,6 +16,7 @@
     <p class="login-brand">Amihan Cove</p>
     <nav class="sidebar-nav">
       <button class="sidebar-link is-active" data-panel="rooms">Rooms</button>
+      <button class="sidebar-link" data-panel="inquiries">Inquiries</button>
       <button class="sidebar-link" data-panel="users">Users</button>
     </nav>
     <div class="sidebar-foot">
@@ -44,6 +45,27 @@
           </thead>
           <tbody id="roomsTableBody">
             <tr><td colspan="7" class="muted-row">Loading rooms…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============ INQUIRIES PANEL ============ -->
+    <section class="panel" id="panel-inquiries">
+      <div class="panel-head">
+        <div>
+          <h1>Inquiries</h1>
+          <p>Messages guests send from the contact page, newest first.</p>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="admin-table" id="inquiriesTable">
+          <thead>
+            <tr><th>Guest</th><th>Subject</th><th>Message</th><th>Received</th><th>Status</th><th></th></tr>
+          </thead>
+          <tbody id="inquiriesTableBody">
+            <tr><td colspan="6" class="muted-row">Loading inquiries...</td></tr>
           </tbody>
         </table>
       </div>
