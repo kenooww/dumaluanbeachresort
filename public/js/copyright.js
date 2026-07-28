@@ -3,8 +3,6 @@
   const socialLinks = Array.from(document.querySelectorAll('.socail_links a, .social-links a, .social_links a'));
   const footerWidgets = Array.from(document.querySelectorAll('.footer_widget'));
 
-  if (!copyrightElements.length && !socialLinks.length && !footerWidgets.length) return;
-
   const fallbackText = (settings) => {
     const year = new Date().getFullYear();
     const companyName = settings?.companyName?.trim() || 'Amihan Cove Resort';
@@ -127,6 +125,33 @@
     `;
   };
 
+  const updateLogo = (settings) => {
+    const logoUrl = settings?.logoUrl?.trim();
+    if (!logoUrl) return;
+
+    const logoImages = Array.from(document.querySelectorAll('.logo-img img, header .logo-img img'));
+    logoImages.forEach((img) => {
+      img.src = logoUrl;
+      if (!img.alt) img.alt = settings.companyName || 'Site logo';
+    });
+  };
+
+  const updateFavicon = (settings) => {
+    const faviconUrl = settings?.faviconUrl?.trim();
+    if (!faviconUrl) return;
+
+    const existing = document.querySelector('link[rel~="icon"], link[rel="shortcut icon"]');
+    if (existing) {
+      existing.href = faviconUrl;
+    } else {
+      const link = document.createElement('link');
+      link.rel = 'shortcut icon';
+      link.type = 'image/x-icon';
+      link.href = faviconUrl;
+      document.head.appendChild(link);
+    }
+  };
+
   const setSliderItems = (settings) => {
     const sliderItems = Array.isArray(settings?.sliderItems)
       ? settings.sliderItems.filter((item) => item?.imageUrl)
@@ -181,6 +206,8 @@
       element.textContent = text;
     });
 
+    updateLogo(settings);
+    updateFavicon(settings);
     setSocialLinks(settings);
     setAddress(settings);
     setContactInfo(settings);
@@ -191,6 +218,8 @@
     copyrightElements.forEach((element) => {
       element.textContent = text;
     });
+    updateLogo(settings);
+    updateFavicon(settings);
     setSocialLinks(settings);
     setAddress(settings);
     setContactInfo(settings);
