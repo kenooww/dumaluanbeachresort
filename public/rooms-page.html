@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rooms | Amihan Cove Resort</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07151a;
+      --panel: #0f2430;
+      --panel-2: #153746;
+      --text: #f4f6f7;
+      --muted: #b5c7cd;
+      --accent: #ffb84d;
+      --accent-2: #2db1aa;
+      --border: rgba(255,255,255,0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--bg), #0b2b35 55%, #13333d);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .page-shell { max-width: 1280px; margin: 0 auto; padding: 32px 20px 80px; }
+    .hero {
+      border: 1px solid var(--border);
+      background: rgba(15,36,48,0.8);
+      border-radius: 24px;
+      padding: 28px;
+      display: grid;
+      gap: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    }
+    .hero h1 { margin: 0; font-size: clamp(1.8rem, 3.2vw, 2.8rem); }
+    .hero p { margin: 0; color: var(--muted); max-width: 720px; line-height: 1.7; }
+    .room-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 28px; }
+    .room-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+    }
+    .room-card img { width: 100%; height: 260px; object-fit: cover; display: block; }
+    .room-body { padding: 20px; display: grid; gap: 12px; }
+    .room-top { display: flex; justify-content: space-between; gap: 12px; align-items: start; }
+    .room-top h2 { margin: 0; font-size: 1.2rem; }
+    .pill { display: inline-flex; align-items: center; padding: 6px 10px; border-radius: 999px; background: rgba(45,177,170,0.2); color: #8fe6d9; font-size: .8rem; font-weight: 600; }
+    .muted { color: var(--muted); line-height: 1.7; }
+    .meta { display: flex; flex-wrap: wrap; gap: 10px; color: var(--muted); font-size: .95rem; }
+    .price { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+    .amenities { display: flex; flex-wrap: wrap; gap: 8px; }
+    .amenities span { padding: 6px 10px; border-radius: 999px; background: rgba(255,184,77,0.12); color: #ffd08c; font-size: .82rem; }
+    .btn-row { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+    .btn {
+      text-decoration: none;
+      color: var(--bg);
+      font-weight: 700;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), #ffc96e);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .status { font-size: .9rem; font-weight: 600; }
+    .status.available { color: #7de0bb; }
+    .status.unavailable { color: #ff9084; }
+    .empty { padding: 24px; text-align: center; color: var(--muted); border: 1px dashed var(--border); border-radius: 16px; background: rgba(255,255,255,0.03); }
+    @media (max-width: 900px) { .room-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <section class="hero">
+      <h1>Stay in comfort by the shore</h1>
+      <p>Browse our collection of thoughtfully designed rooms and suites, each crafted for relaxation, ocean views, and unforgettable stays at Amihan Cove Resort.</p>
+    </section>
+
+    <section id="roomsContainer" class="room-grid"></section>
+  </div>
+
+  <script>
+    async function loadRooms() {
+      const container = document.getElementById('roomsContainer');
+      try {
+        const res = await fetch('/api/rooms');
+        if (!res.ok) throw new Error('Unable to load rooms');
+        const rooms = await res.json();
+
+        if (!Array.isArray(rooms) || !rooms.length) {
+          container.innerHTML = '<div class="empty">No rooms available right now.</div>';
+          return;
+        }
+
+        container.innerHTML = rooms.map(room => {
+          const image = room.image || 'img/rooms/1.png';
+          const amenities = Array.isArray(room.amenities) ? room.amenities : [];
+          const statusClass = room.available === false ? 'unavailable' : 'available';
+          const statusText = room.available === false ? 'Booked' : 'Available';
+          return `
+            <article class="room-card">
+              <img src="${image}" alt="${room.name || 'Room'}">
+              <div class="room-body">
+                <div class="room-top">
+                  <div>
+                    <h2>${room.name || 'Room'}</h2>
+                    <div class="muted">${room.type || 'Resort Room'}</div>
+                  </div>
+                  <span class="pill">${room.capacity || 2} Guests</span>
+                </div>
+                <div class="price">From $${Number(room.pricePerNight || 0).toLocaleString()}</div>
+                <p class="muted">${(room.description || 'A relaxing retreat designed for comfort and scenic views.').slice(0, 180)}${(room.description || '').length > 180 ? '…' : ''}</p>
+                <div class="meta">
+                  <span>🛏 ${room.capacity || 2} guests</span>
+                  <span>🌊 Beachfront comfort</span>
+                </div>
+                <div class="amenities">${amenities.slice(0, 4).map(item => `<span>${item}</span>`).join('')}</div>
+                <div class="btn-row">
+                  <span class="status ${statusClass}">${statusText}</span>
+                  <a class="btn" href="#">Reserve now</a>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<div class="empty">Unable to load rooms at the moment.</div>';
+      }
+    }
+
+    loadRooms();
+  </script>
+</body>
+</html>

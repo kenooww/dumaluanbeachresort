@@ -9,6 +9,8 @@ const roomRoutes = require('./routes/rooms');
 const userRoutes = require('./routes/users');
 const contactRoutes = require('./routes/contact');
 const blogPostRoutes = require('./routes/blogposts');
+const settings = require('./routes/settings');
+
 
 const app = express();
 
@@ -38,6 +40,7 @@ app.use('/api/rooms', roomRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/blog-posts', blogPostRoutes);
+app.use('/api/settings', settings);
 
 // Serve the public website + admin dashboard
 app.use(express.static(path.join(__dirname, 'public')));

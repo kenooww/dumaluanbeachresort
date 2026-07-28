@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/admin.css">
+<link rel="stylesheet" href="css/admin-settings.css">
 </head>
 <body class="admin-body">
 
@@ -19,6 +20,7 @@
       <button class="sidebar-link" data-panel="posts">Blog Posts</button>
       <button class="sidebar-link" data-panel="inquiries">Inquiries</button>
       <button class="sidebar-link" data-panel="users">Users</button>
+      <button class="sidebar-link" data-panel="settings">Website Settings</button>
     </nav>
     <div class="sidebar-foot">
       <p id="whoAmI" class="who-am-i">—</p>
@@ -114,6 +116,138 @@
           </tbody>
         </table>
       </div>
+    </section>
+
+    <!-- ============ WEBSITE SETTINGS PANEL ============ -->
+    <section class="panel" id="panel-settings">
+      <div class="panel-head">
+        <div>
+          <h1>Website Settings</h1>
+          <p>Company information shown across the live site — header, footer, about page, and contact page.</p>
+        </div>
+        <button class="btn btn-coral" id="saveSettingsBtn" form="settingsForm">Save changes</button>
+      </div>
+
+      <form id="settingsForm" enctype="multipart/form-data">
+
+        <!-- Company Identity -->
+        <div class="settings-card">
+          <h2>Company Identity</h2>
+          <div class="form-row">
+            <label>Company / Resort name<input type="text" name="companyName" id="settingsCompanyName" placeholder="Dumaluan Beach Resort I"></label>
+            <label>Tagline / Slogan<input type="text" name="tagline" id="settingsTagline" placeholder="Where the tide meets the tale"></label>
+          </div>
+          <div class="form-row">
+            <label>Logo
+              <input type="file" name="logo" id="settingsLogo" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+            </label>
+            <label>Favicon
+              <input type="file" name="favicon" id="settingsFavicon" accept="image/png,image/x-icon,image/svg+xml">
+            </label>
+          </div>
+          <div class="form-row">
+            <img id="settingsLogoPreview" class="image-preview" alt="" hidden>
+            <img id="settingsFaviconPreview" class="image-preview image-preview-sm" alt="" hidden>
+          </div>
+        </div>
+
+        <!-- About Us -->
+        <div class="settings-card">
+          <h2>About Us</h2>
+          <label>About Us story <span class="hint">(shown on the About page)</span>
+            <textarea name="aboutUs" id="settingsAboutUs" rows="6" placeholder="Tell guests who you are, your history, and what makes the resort special."></textarea>
+          </label>
+          <label>Mission statement
+            <textarea name="mission" id="settingsMission" rows="3" placeholder="What is the resort's mission?"></textarea>
+          </label>
+          <label>Vision statement
+            <textarea name="vision" id="settingsVision" rows="3" placeholder="Where is the resort headed?"></textarea>
+          </label>
+          <label>Year established<input type="number" name="yearEstablished" id="settingsYearEstablished" min="1900" max="2100" placeholder="2010"></label>
+        </div>
+
+        <!-- Homepage Slider -->
+        <div class="settings-card">
+          <h2>Homepage Slider</h2>
+          <p class="hint">Upload multiple background images and add slide text for the homepage hero slider.</p>
+          <div id="settingsSliderItems" class="slider-items"></div>
+          <button type="button" class="btn btn-secondary" id="addSliderItemBtn">Add slide</button>
+        </div>
+
+        <!-- Contact & Address -->
+        <div class="settings-card">
+          <h2>Contact &amp; Address</h2>
+          <label>Street address<input type="text" name="address" id="settingsAddress" placeholder="Dumaluan Beach, Panglao Island"></label>
+          <div class="form-row">
+            <label>City / Municipality<input type="text" name="city" id="settingsCity" placeholder="Panglao"></label>
+            <label>Province<input type="text" name="province" id="settingsProvince" placeholder="Bohol"></label>
+          </div>
+          <div class="form-row">
+            <label>Postal code<input type="text" name="postalCode" id="settingsPostalCode" placeholder="6340"></label>
+            <label>Country<input type="text" name="country" id="settingsCountry" placeholder="Philippines"></label>
+          </div>
+          <div class="form-row">
+            <label>Phone number<input type="tel" name="phone" id="settingsPhone" placeholder="+63 917 000 0000"></label>
+            <label>WhatsApp / Viber number<input type="tel" name="whatsapp" id="settingsWhatsapp" placeholder="+63 917 000 0000"></label>
+          </div>
+          <div class="form-row">
+            <label>General email<input type="email" name="email" id="settingsEmail" placeholder="info@dumaluanresort.com"></label>
+            <label>Reservations email<input type="email" name="reservationsEmail" id="settingsReservationsEmail" placeholder="reservations@dumaluanresort.com"></label>
+          </div>
+          <div class="form-row">
+            <label>Latitude<input type="text" name="latitude" id="settingsLatitude" placeholder="9.5539"></label>
+            <label>Longitude<input type="text" name="longitude" id="settingsLongitude" placeholder="123.7534"></label>
+          </div>
+          <label>Google Maps embed link
+            <input type="url" name="mapsEmbedUrl" id="settingsMapsEmbedUrl" placeholder="https://www.google.com/maps/embed?...">
+          </label>
+        </div>
+
+        <!-- Hours & Policies -->
+        <div class="settings-card">
+          <h2>Hours &amp; Policies</h2>
+          <div class="form-row">
+            <label>Check-in time<input type="time" name="checkInTime" id="settingsCheckInTime"></label>
+            <label>Check-out time<input type="time" name="checkOutTime" id="settingsCheckOutTime"></label>
+          </div>
+          <label>Front desk / reception hours<input type="text" name="frontDeskHours" id="settingsFrontDeskHours" placeholder="24 hours"></label>
+          <label>Cancellation policy
+            <textarea name="cancellationPolicy" id="settingsCancellationPolicy" rows="3" placeholder="Free cancellation up to 48 hours before arrival..."></textarea>
+          </label>
+          <label>Terms &amp; Conditions
+            <textarea name="termsAndConditions" id="settingsTerms" rows="4" placeholder="Full terms and conditions text or link."></textarea>
+          </label>
+          <label>Privacy policy
+            <textarea name="privacyPolicy" id="settingsPrivacyPolicy" rows="4" placeholder="Privacy policy text or link."></textarea>
+          </label>
+        </div>
+
+        <!-- Social Media -->
+        <div class="settings-card">
+          <h2>Social Media</h2>
+          <div class="form-row">
+            <label>Facebook<input type="url" name="facebookUrl" id="settingsFacebook" placeholder="https://facebook.com/..."></label>
+            <label>Instagram<input type="url" name="instagramUrl" id="settingsInstagram" placeholder="https://instagram.com/..."></label>
+          </div>
+          <div class="form-row">
+            <label>TikTok<input type="url" name="tiktokUrl" id="settingsTiktok" placeholder="https://tiktok.com/@..."></label>
+            <label>YouTube<input type="url" name="youtubeUrl" id="settingsYoutube" placeholder="https://youtube.com/@..."></label>
+          </div>
+          <div class="form-row">
+            <label>X / Twitter<input type="url" name="twitterUrl" id="settingsTwitter" placeholder="https://x.com/..."></label>
+            <label>TripAdvisor<input type="url" name="tripadvisorUrl" id="settingsTripadvisor" placeholder="https://tripadvisor.com/..."></label>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="settings-card">
+          <h2>Footer</h2>
+
+          <label>Copyright text<input type="text" name="copyrightText" id="settingsCopyrightText" placeholder="© 2026 Dumaluan Beach Resort I. All rights reserved."></label>
+        </div>
+
+        <p class="form-error" id="settingsFormError"></p>
+      </form>
     </section>
 
   </main>
@@ -217,5 +351,6 @@
 </div>
 
 <script src="js/admin.js"></script>
+<script src="js/admin-settings.js"></script>
 </body>
 </html>

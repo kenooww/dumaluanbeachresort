@@ -1,0 +1,120 @@
+/* Website Settings panel — additive styles only, doesn't override admin.css */
+
+#panel-settings #settingsForm {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 860px;
+}
+
+.settings-card {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.settings-card h2 {
+  font-family: "Fraunces", serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 4px;
+}
+
+.settings-card label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.settings-card input,
+.settings-card textarea,
+.settings-card select {
+  font-family: "Work Sans", sans-serif;
+  font-size: 0.95rem;
+  padding: 10px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.settings-card .form-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.settings-card .form-row > label {
+  flex: 1 1 240px;
+}
+
+.image-preview-sm {
+  max-height: 48px;
+  max-width: 48px;
+  object-fit: contain;
+}
+
+#saveSettingsBtn {
+  align-self: flex-start;
+}
+
+.slider-items {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.slider-item {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 14px;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  background: #fff;
+}
+
+.slider-item-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.slider-item-row label {
+  flex: 1 1 240px;
+}
+
+.slider-item-preview {
+  max-width: 220px;
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.slider-item-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.slider-item-actions button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #fff;
+  cursor: pointer;
+}
+
+.slider-item-actions button:hover {
+  background: #f7f7f7;
+}
+
+#addSliderItemBtn {
+  max-width: fit-content;
+}
