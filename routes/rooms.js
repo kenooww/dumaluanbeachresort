@@ -18,10 +18,14 @@ router.get('/:id', async (req, res) => {
   res.json(room);
 });
 
-// POST /api/rooms - admin only, with optional image upload (stored on Cloudinary)
-router.post('/', protect, upload.single('image'), async (req, res) => {
+// POST /api/rooms - admin only, with optional image uploads (stored on Cloudinary)
+router.post('/', protect, upload.any(), async (req, res) => {
   try {
     const { name, type, description, pricePerNight, capacity, amenities, available } = req.body;
+    // multer with .any() sets req.files to an array of files
+    const uploadedFiles = Array.isArray(req.files) ? req.files.slice(0, 8) : [];
+    const imageUrls = uploadedFiles.map((file) => file.path);
+    const imagePublicIds = uploadedFiles.map((file) => file.filename);
 
     const room = await Room.create({
       name,
@@ -36,23 +40,27 @@ router.post('/', protect, upload.single('image'), async (req, res) => {
             .map((a) => a.trim())
             .filter(Boolean)
         : [],
-      image: req.file ? req.file.path : '', // Cloudinary secure_url
-      imagePublicId: req.file ? req.file.filename : '', // Cloudinary public_id
+      image: imageUrls[0] || '',
+      images: imageUrls,
+      imagePublicId: imagePublicIds[0] || '',
+      imagePublicIds,
     });
 
     res.status(201).json(room);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    console.error('POST /api/rooms error:', err);
+    res.status(500).json({ message: err.message, stack: err.stack });
   }
 });
 
-// PUT /api/rooms/:id - admin only, with optional new image upload
-router.put('/:id', protect, upload.single('image'), async (req, res) => {
+// PUT /api/rooms/:id - admin only, with optional new image uploads
+router.put('/:id', protect, upload.any(), async (req, res) => {
   try {
     const room = await Room.findById(req.params.id);
     if (!room) return res.status(404).json({ message: 'Room not found.' });
 
     const { name, type, description, pricePerNight, capacity, amenities, available } = req.body;
+    const uploadedFiles = Array.isArray(req.files) ? req.files.slice(0, 8) : [];
 
     if (name !== undefined) room.name = name;
     if (type !== undefined) room.type = type;
@@ -67,19 +75,21 @@ router.put('/:id', protect, upload.single('image'), async (req, res) => {
         .filter(Boolean);
     }
 
-    if (req.file) {
-      // remove the old Cloudinary image if there was one, then swap in the new one
-      if (room.imagePublicId) {
-        cloudinary.uploader.destroy(room.imagePublicId).catch(() => {});
-      }
-      room.image = req.file.path;
-      room.imagePublicId = req.file.filename;
+    if (uploadedFiles.length) {
+      const publicIdsToDelete = [...new Set([...(room.imagePublicIds || []), room.imagePublicId].filter(Boolean))];
+      await Promise.all(publicIdsToDelete.map((publicId) => cloudinary.uploader.destroy(publicId).catch(() => {})));
+
+      room.images = uploadedFiles.map((file) => file.path);
+      room.image = room.images[0] || '';
+      room.imagePublicIds = uploadedFiles.map((file) => file.filename);
+      room.imagePublicId = room.imagePublicIds[0] || '';
     }
 
     await room.save();
     res.json(room);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    console.error('PUT /api/rooms/:id error:', err);
+    res.status(500).json({ message: err.message, stack: err.stack });
   }
 });
 
@@ -88,9 +98,8 @@ router.delete('/:id', protect, async (req, res) => {
   const room = await Room.findById(req.params.id);
   if (!room) return res.status(404).json({ message: 'Room not found.' });
 
-  if (room.imagePublicId) {
-    cloudinary.uploader.destroy(room.imagePublicId).catch(() => {});
-  }
+  const publicIdsToDelete = [...new Set([...(room.imagePublicIds || []), room.imagePublicId].filter(Boolean))];
+  await Promise.all(publicIdsToDelete.map((publicId) => cloudinary.uploader.destroy(publicId).catch(() => {})));
 
   await room.deleteOne();
   res.json({ message: 'Room deleted.' });

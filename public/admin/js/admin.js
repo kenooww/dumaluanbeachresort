@@ -66,23 +66,37 @@ function initDashboard() {
   const roomModalOverlay = document.getElementById('roomModalOverlay');
   const roomForm = document.getElementById('roomForm');
   const roomFormError = document.getElementById('roomFormError');
-  const roomImageInput = document.getElementById('roomImage');
-  const roomImagePreview = document.getElementById('roomImagePreview');
+  const roomImagesInput = document.getElementById('roomImages');
+  const roomImagesPreview = document.getElementById('roomImagesPreview');
+
+  function renderRoomImagePreview(files = [], existingImages = []) {
+    const previews = [];
+    existingImages.filter(Boolean).forEach((src) => previews.push({ src, isExisting: true }));
+    Array.from(files || []).forEach((file) => previews.push({ src: URL.createObjectURL(file), isExisting: false }));
+
+    if (!previews.length) {
+      roomImagesPreview.innerHTML = '';
+      return;
+    }
+
+    roomImagesPreview.innerHTML = previews.map((item) => `
+      <div style="width:90px;height:90px;border-radius:10px;overflow:hidden;border:1px solid #e3e3e3;display:flex;align-items:center;justify-content:center;background:#f8f8f8;">
+        <img src="${item.src}" alt="Room preview" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+    `).join('');
+  }
 
   document.getElementById('newRoomBtn').addEventListener('click', () => {
     roomForm.reset();
     document.getElementById('roomId').value = '';
     document.getElementById('roomModalTitle').textContent = 'Add room';
-    roomImagePreview.hidden = true;
+    renderRoomImagePreview([]);
     roomFormError.textContent = '';
     openModal(roomModalOverlay);
   });
 
-  roomImageInput.addEventListener('change', () => {
-    const file = roomImageInput.files[0];
-    if (!file) { roomImagePreview.hidden = true; return; }
-    roomImagePreview.src = URL.createObjectURL(file);
-    roomImagePreview.hidden = false;
+  roomImagesInput.addEventListener('change', () => {
+    renderRoomImagePreview(roomImagesInput.files || []);
   });
 
   async function loadRoomsTable() {
@@ -139,11 +153,10 @@ function initDashboard() {
     document.getElementById('roomCapacity').value = room.capacity;
     document.getElementById('roomAmenities').value = (room.amenities || []).join(', ');
     document.getElementById('roomAvailable').checked = !!room.available;
-    if (room.image) {
-      roomImagePreview.src = room.image;
-      roomImagePreview.hidden = false;
+    if (room.images?.length || room.image) {
+      renderRoomImagePreview([], room.images?.length ? room.images : [room.image]);
     } else {
-      roomImagePreview.hidden = true;
+      renderRoomImagePreview([]);
     }
     roomFormError.textContent = '';
     openModal(roomModalOverlay);
@@ -167,7 +180,9 @@ function initDashboard() {
     const id = document.getElementById('roomId').value;
     const formData = new FormData(roomForm);
     formData.set('available', document.getElementById('roomAvailable').checked ? 'true' : 'false');
-    if (!roomImageInput.files[0]) formData.delete('image');
+    if (!roomImagesInput.files.length) {
+      formData.delete('images');
+    }
 
     try {
       const res = await handleAuthedFetch(id ? `/api/rooms/${id}` : '/api/rooms', {

@@ -311,10 +311,10 @@
         <input type="text" name="amenities" id="roomAmenities" placeholder="Ocean view, Private deck, Free breakfast">
       </label>
       <label class="checkbox-row"><input type="checkbox" name="available" id="roomAvailable" checked> Available for booking</label>
-      <label>Room photo
-        <input type="file" name="image" id="roomImage" accept="image/png,image/jpeg,image/webp,image/gif">
+      <label>Room photos
+        <input type="file" name="images" id="roomImages" multiple accept="image/png,image/jpeg,image/webp,image/gif">
       </label>
-      <img id="roomImagePreview" class="image-preview" alt="" hidden>
+      <div id="roomImagesPreview" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;"></div>
       <div class="modal-actions">
         <button type="button" class="btn btn-muted" data-close="roomModalOverlay">Cancel</button>
         <button type="submit" class="btn btn-coral">Save room</button>
