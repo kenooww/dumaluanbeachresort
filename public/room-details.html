@@ -86,7 +86,7 @@
                 <h1>${room.name || 'Room'}</h1>
                 <div class="muted">${room.description || 'A relaxing retreat designed for comfort and scenic views.'}</div>
               </div>
-              <div class="price">From $${Number(room.pricePerNight || 0).toLocaleString()} / night</div>
+              <div class="price">From PHP ${Number(room.pricePerNight || 0).toLocaleString()} / night</div>
             </div>
             <div class="meta">
               <span class="pill">👥 ${room.capacity || 2} guests</span>

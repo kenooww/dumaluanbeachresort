@@ -131,7 +131,7 @@ function initDashboard() {
         <td>${thumb}</td>
         <td>${escapeHtml(room.name)}</td>
         <td>${escapeHtml(room.type || '')}</td>
-        <td>$${Number(room.pricePerNight).toFixed(0)}</td>
+        <td>PHP ${Number(room.pricePerNight).toFixed(0)}</td>
         <td>${room.capacity}</td>
         <td>${status}</td>
         <td>

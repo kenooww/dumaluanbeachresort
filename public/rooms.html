@@ -439,7 +439,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
                     <img src="${imageList[0]}" alt="${room.name || 'Room'}">
                     <div class="room-modal-body">
                         <h3>${room.name || 'Resort Room'}</h3>
-                        <p class="price">From $${Number(room.pricePerNight || 0).toLocaleString()} / night</p>
+                        <p class="price">From PHP ${Number(room.pricePerNight || 0).toLocaleString()} / night</p>
                         <p>${room.description || 'A relaxing retreat designed for comfort and scenic views.'}</p>
                         <div class="meta-list">
                             <span>${room.type || 'Resort Room'}</span>
@@ -502,7 +502,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
                                 </ul>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="${statusClass}">${status}</span>
-                                    <span class="font-weight-bold">From $${Number(room.pricePerNight || 0).toLocaleString()}</span>
+                                    <span class="font-weight-bold">From PHP ${Number(room.pricePerNight || 0).toLocaleString()}</span>
                                 </div>
                             </div>
                         </div>
