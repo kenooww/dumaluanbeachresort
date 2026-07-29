@@ -171,6 +171,46 @@
     }
   };
 
+  const setAboutSection = (settings) => {
+    const aboutText = settings?.aboutUs?.trim();
+    const aboutText2 = settings?.aboutUs2?.trim();
+    const aboutParagraph = document.querySelector('.about_area#about_us .about_info p');
+    const aboutParagraph2 = document.querySelector('.about_area#about_us .about_info2 p');
+    if (aboutParagraph && aboutText) {
+      aboutParagraph.innerHTML = escapeHtml(aboutText).replace(/\n/g, '<br>');
+    }
+    if (aboutParagraph2 && aboutText2) {
+      aboutParagraph2.innerHTML = escapeHtml(aboutText2).replace(/\n/g, '<br>');
+    }
+
+    const aboutThumb = document.querySelector('.about_area#about_us .about_thumb');
+    const aboutImages = Array.isArray(settings?.aboutImages)
+      ? settings.aboutImages.filter((item) => item?.imageUrl)
+      : [];
+
+    if (aboutThumb && aboutImages.length) {
+      aboutThumb.innerHTML = aboutImages
+        .map((item) => `
+          <div class="about-image-item">
+            <img src="${escapeHtml(item.imageUrl)}" alt="About image">
+          </div>
+        `)
+        .join('');
+    }
+  };
+  const setVisionMissionSection = (settings) => {
+    const missionText = settings?.mission?.trim();
+    const visionText = settings?.vision?.trim();
+    const missionParagraph = document.querySelector('.mission_info p');
+    const visionParagraph = document.querySelector('.vision_info p');
+    if (missionParagraph && missionText) {
+      missionParagraph.innerHTML = escapeHtml(missionText).replace(/\n/g, '<br>');
+    }
+    if (visionParagraph && visionText) {
+      visionParagraph.innerHTML = escapeHtml(visionText).replace(/\n/g, '<br>');
+    }
+  };
+
   const setContactInfo = (settings) => {
     const contactBlocks = Array.from(document.querySelectorAll('.media.contact-info'));
     contactBlocks.forEach((block) => {
@@ -212,6 +252,8 @@
     setAddress(settings);
     setContactInfo(settings);
     setSliderItems(settings);
+    setAboutSection(settings);
+    setVisionMissionSection(settings);
   } catch (error) {
     const settings = {};
     const text = fallbackText(settings);
@@ -224,5 +266,7 @@
     setAddress(settings);
     setContactInfo(settings);
     setSliderItems(settings);
+    setAboutSection(settings);
+    setVisionMissionSection(settings);
   }
 })();

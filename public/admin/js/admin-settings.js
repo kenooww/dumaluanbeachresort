@@ -16,7 +16,7 @@
 
   const fieldIds = [
     "companyName", "tagline",
-    "aboutUs", "mission", "vision", "yearEstablished",
+    "aboutUs",'aboutUs2', "mission", "vision", "yearEstablished",
     "address", "city", "province", "postalCode", "country",
     "phone", "whatsapp", "email", "reservationsEmail",
     "latitude", "longitude", "mapsEmbedUrl",
@@ -30,7 +30,10 @@
 
   const sliderItemsContainer = document.getElementById('settingsSliderItems');
   const addSliderItemBtn = document.getElementById('addSliderItemBtn');
+  const aboutImagesInput = document.getElementById('settingsAboutImages');
+  const aboutImagesPreview = document.getElementById('settingsAboutImagesPreview');
   let sliderItemsState = [];
+  let aboutImagesState = [];
 
   function setError(msg) {
     if (errorEl) errorEl.textContent = msg || "";
@@ -128,6 +131,83 @@
     }
   }
 
+  function createAboutImagePreview(item, index) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'about-image-preview-item';
+    wrapper.dataset.index = index;
+
+    const img = document.createElement('img');
+    img.alt = 'About image preview';
+    if (item.file) {
+      img.src = URL.createObjectURL(item.file);
+    } else if (item.imageUrl) {
+      img.src = item.imageUrl;
+    }
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.textContent = 'Remove';
+    removeBtn.addEventListener('click', () => {
+      aboutImagesState.splice(index, 1);
+      renderAboutImages();
+    });
+
+    wrapper.appendChild(img);
+    wrapper.appendChild(removeBtn);
+    return wrapper;
+  }
+
+  function renderAboutImages() {
+    if (!aboutImagesPreview) return;
+    aboutImagesPreview.innerHTML = '';
+
+    if (aboutImagesState.length === 0) {
+      aboutImagesPreview.innerHTML = '<p class="hint">No about images configured yet.</p>';
+      return;
+    }
+
+    aboutImagesState.forEach((item, index) => {
+      const previewItem = createAboutImagePreview(item, index);
+      aboutImagesPreview.appendChild(previewItem);
+    });
+  }
+
+  function loadAboutImages(data) {
+    aboutImagesState = Array.isArray(data.aboutImages)
+      ? data.aboutImages.map((item) => ({
+          imageUrl: item.imageUrl || '',
+          imagePublicId: item.imagePublicId || '',
+          file: null,
+        }))
+      : [];
+    renderAboutImages();
+  }
+
+  function appendAboutImagesToForm(formData) {
+    formData.delete('aboutImagesData');
+    formData.delete('aboutImages');
+
+    const items = [];
+    let fileCounter = 0;
+
+    aboutImagesState.forEach((item) => {
+      const payloadItem = {
+        imageUrl: item.imageUrl || '',
+        imagePublicId: item.imagePublicId || '',
+      };
+
+      if (item.file) {
+        payloadItem.newImageIndex = fileCounter;
+        formData.append('aboutImages', item.file);
+        fileCounter += 1;
+      }
+
+      items.push(payloadItem);
+    });
+
+    formData.set('aboutImagesData', JSON.stringify(items));
+  }
+
   function appendSliderItemsToForm(formData) {
     formData.delete('sliderItems');
     formData.delete('sliderImages');
@@ -184,6 +264,17 @@
     });
   }
 
+  if (aboutImagesInput) {
+    aboutImagesInput.addEventListener('change', () => {
+      const files = Array.from(aboutImagesInput.files || []);
+      files.forEach((file) => {
+        aboutImagesState.push({ imageUrl: '', imagePublicId: '', file });
+      });
+      aboutImagesInput.value = '';
+      renderAboutImages();
+    });
+  }
+
   async function loadSettings() {
     try {
       const res = await fetch("/api/settings");
@@ -208,6 +299,7 @@
         favPreview.hidden = false;
       }
       loadSliderItems(data);
+      loadAboutImages(data);
     } catch (err) {
       console.error(err);
       setError("Could not load current settings. You can still fill in the form and save.");
@@ -238,6 +330,7 @@
     try {
       const formData = new FormData(form);
       appendSliderItemsToForm(formData);
+      appendAboutImagesToForm(formData);
       const res = await fetch("/api/settings", {
         method: "PUT",
         headers: { ...authHeaders() },
@@ -265,7 +358,15 @@
       // Refresh UI with server-side saved values (ensures public IDs and subtitles update)
       try {
         const data = await res.json();
+        if (data?.aboutImages) {
+          aboutImagesState = data.aboutImages.map((item) => ({
+            imageUrl: item.imageUrl || '',
+            imagePublicId: item.imagePublicId || '',
+            file: null,
+          }));
+        }
         loadSliderItems(data);
+        loadAboutImages(data);
       } catch (e) {
         // ignore JSON parse errors here — we still show saved indicator
       }

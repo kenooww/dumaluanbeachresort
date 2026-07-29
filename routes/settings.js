@@ -24,6 +24,7 @@ router.put(
     { name: 'logo', maxCount: 1 },
     { name: 'favicon', maxCount: 1 },
     { name: 'sliderImages', maxCount: 10 },
+    { name: 'aboutImages', maxCount: 10 },
   ]),
   async (req, res) => {
     try {
@@ -32,7 +33,7 @@ router.put(
 
       const fields = [
         'companyName', 'tagline',
-        'aboutUs', 'mission', 'vision', 'yearEstablished',
+        'aboutUs','aboutUs2', 'mission', 'vision', 'yearEstablished',
         'address', 'city', 'province', 'postalCode', 'country',
         'phone', 'whatsapp', 'email', 'reservationsEmail',
         'latitude', 'longitude', 'mapsEmbedUrl',
@@ -60,11 +61,31 @@ router.put(
         }
       })();
 
+      const aboutImagesPayload = (() => {
+        const raw = typeof req.body.aboutImagesData === 'string'
+          ? req.body.aboutImagesData.trim()
+          : (req.body.aboutImagesData || req.body.aboutImages);
+        if (!raw) return null;
+        if (Array.isArray(raw)) return raw;
+        try {
+          return JSON.parse(raw);
+        } catch (parseErr) {
+          console.error('Invalid aboutImages payload:', parseErr, raw);
+          return null;
+        }
+      })();
+
       if (req.body.sliderItems) {
         console.debug('sliderItems raw payload:', req.body.sliderItems);
       }
       if (req.files?.sliderImages) {
         console.debug('sliderImages count:', req.files.sliderImages.length, 'names:', req.files.sliderImages.map((f) => f.originalname));
+      }
+      if (req.body.aboutImagesData) {
+        console.debug('aboutImages raw payload:', req.body.aboutImagesData);
+      }
+      if (req.files?.aboutImages) {
+        console.debug('aboutImages count:', req.files.aboutImages.length, 'names:', req.files.aboutImages.map((f) => f.originalname));
       }
 
       if (Array.isArray(sliderItemsPayload)) {
@@ -104,6 +125,43 @@ router.put(
         });
 
         settings.sliderItems = finalSliderItems;
+      }
+
+      if (Array.isArray(aboutImagesPayload)) {
+        const files = req.files?.aboutImages || [];
+        let uploadCount = 0;
+        const finalAboutImages = aboutImagesPayload.reduce((acc, item) => {
+          if (!item) return acc;
+          let imageUrl = String(item.imageUrl || '').trim();
+          let imagePublicId = String(item.imagePublicId || '').trim();
+
+          if (item.newImageIndex !== undefined && files[item.newImageIndex]) {
+            const file = files[item.newImageIndex];
+            if (imagePublicId && imagePublicId !== file.filename) {
+              cloudinary.uploader.destroy(imagePublicId).catch(() => {});
+            }
+            imageUrl = file.path;
+            imagePublicId = file.filename;
+          } else if (uploadCount < files.length && !imageUrl) {
+            const file = files[uploadCount];
+            imageUrl = file.path;
+            imagePublicId = file.filename;
+            uploadCount += 1;
+          }
+
+          if (!imageUrl) return acc;
+          acc.push({ imageUrl, imagePublicId });
+          return acc;
+        }, []);
+
+        const existingPublicIds = new Set((finalAboutImages || []).map((item) => item.imagePublicId).filter(Boolean));
+        (settings.aboutImages || []).forEach((oldItem) => {
+          if (oldItem.imagePublicId && !existingPublicIds.has(oldItem.imagePublicId)) {
+            cloudinary.uploader.destroy(oldItem.imagePublicId).catch(() => {});
+          }
+        });
+
+        settings.aboutImages = finalAboutImages;
       }
 
       if (req.files?.logo?.[0]) {

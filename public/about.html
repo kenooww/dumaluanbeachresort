@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Dumaluan Beach Resort</title>
+    <title>Montana</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -45,7 +45,7 @@
                                       <li><a href="index.html">home</a></li>
                                       <li><a href="about.html">About</a></li>
                                       <li><a href="rooms.html">rooms</a></li>
-                                      <li><a href="blog.html">Blog</a></li>
+                                       <li><a href="blog.html">Blog</a></li>
                                       <li><a href="contact.html">Contact</a></li>
                                   </ul>
                                 </nav>
@@ -79,7 +79,6 @@
                                         </li>
                                     </ul>
                                 </div>
-                              
                             </div>
                         </div>
                         <div class="col-12">
@@ -93,26 +92,70 @@
     <!-- header-end -->
 
     <!-- bradcam_area_start -->
-    <div class="bradcam_area breadcam_bg_1">
-        <h3>Our Rooms</h3>
+    <div class="bradcam_area breadcam_bg">
+        <h3>About Dumaluan Beach Resort I</h3>
     </div>
     <!-- bradcam_area_end -->
 
-    <!-- room showcase section -->
-    <div class="offers_area padding_top">
+  <!-- about_area_start -->
+    <div class="about_area" id="about_us">
         <div class="container">
             <div class="row">
-                <div class="col-xl-12">
-                    <div class="section_title text-center mb-100">
-                        <span>Stay in Style</span>
-                        <h3>Discover our resort rooms</h3>
+                <div class="col-xl-5 col-lg-5">
+                    <div class="about_info">
+                        <div class="section_title mb-20px">
+                            <span>About Us</span>
+                            <h3>A Home by the Sea <br>in Panglao 
+                                with Nature</h3>
+                        </div>
+                        <p></p>
+                        
+                    </div>
+                    <div class="about_info2">
+                        
+                        <p>This is to let you know that our company is. Blan clakd dksajkd.</p>
+                        
+                    </div>
+                </div>
+                <div class="col-xl-7 col-lg-7">
+                    <div class="about_thumb d-flex">
+                        <div class="img_1">
+                            <img src="img/about/about_1.png" alt="">
+                        </div>
+                        <div class="img_2">
+                            <img src="img/about/about_2.png" alt="">
+                        </div>
+                        
                     </div>
                 </div>
             </div>
-            <div id="roomsContainer" class="row"></div>
         </div>
     </div>
-    <!-- room showcase end -->
+    <!-- about_area_end -->
+
+    <!-- about_main_info_start -->
+    <div class="about_main_info">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-6 col-md-6">
+                    <div class="mission_info">
+                        <h3>Our Mission <br>
+                           </h3>
+                            <p>
+                            </p>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-md-6">
+                    <div class="vision_info">
+                        <h3>Our Vision <br>
+                           </h3>
+                            <p></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- about_main_info_end -->
 
     <!-- forQuery_start -->
     <div class="forQuery">
@@ -138,8 +181,6 @@
         </div>
     </div>
     <!-- forQuery_end-->
-
-     
     
     <!-- footer -->
     <footer class="footer" >
@@ -162,7 +203,7 @@
                                     Reservation
                             </h3>
                             <p class="footer_text" >+10 367 267 2678 <br>
-                                    reservation@dbr.com</p>
+                                    reservation@montana.com</p>
                         </div>
                     </div>
                     <div class="col-xl-2 col-md-6 col-lg-2">
@@ -229,6 +270,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             </div>
         </div>
     </footer>
+    <!-- footer_end -->
 
     <!-- form itself end-->
     <form id="test-form" class="white-popup-block mfp-hide">
@@ -322,170 +364,9 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
         });
     </script>
+    <script src="js/copyright.js"></script>
 
-    <style>
-        .room-modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(6, 20, 26, 0.78);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            z-index: 9999;
-        }
-        .room-modal-overlay.active { display: flex; }
-        .room-modal {
-            background: #fff;
-            color: #222;
-            width: min(900px, 100%);
-            max-height: 90vh;
-            overflow: auto;
-            border-radius: 18px;
-            box-shadow: 0 18px 50px rgba(0,0,0,0.25);
-            position: relative;
-        }
-        .room-modal img { width: 100%; height: 320px; object-fit: cover; }
-        .room-modal-body { padding: 24px; }
-        .room-modal-close {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            border: none;
-            background: rgba(0,0,0,0.7);
-            color: #fff;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 20px;
-        }
-        .room-modal .price { color: #d08a00; font-weight: 700; }
-        .room-modal .meta-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 14px; }
-        .room-modal .meta-list span { background: #f2f6f7; padding: 6px 10px; border-radius: 999px; font-size: 0.9rem; }
-        .room-modal-gallery { display: grid; gap: 10px; margin-top: 16px; }
-        .room-modal-gallery img { width: 100%; height: 220px; object-fit: cover; border-radius: 12px; }
-    </style>
 
-    <div id="roomModalOverlay" class="room-modal-overlay" role="dialog" aria-modal="true" aria-label="Room details">
-        <div class="room-modal">
-            <button id="roomModalClose" class="room-modal-close" type="button" aria-label="Close">×</button>
-            <div id="roomModalContent"></div>
-        </div>
-    </div>
-
-    <script>
-        async function loadRooms() {
-            const container = document.getElementById('roomsContainer');
-            const modalOverlay = document.getElementById('roomModalOverlay');
-            const modalContent = document.getElementById('roomModalContent');
-            const modalClose = document.getElementById('roomModalClose');
-            if (!container) return;
-
-            function getRoomImages(room) {
-                const images = Array.isArray(room.images) ? room.images.filter(Boolean) : [];
-                return images.length ? images : (room.image ? [room.image] : ['img/rooms/1.png']);
-            }
-
-            function openModal(room) {
-                const imageList = getRoomImages(room);
-                const amenities = Array.isArray(room.amenities) ? room.amenities : [];
-                const status = room.available === false ? 'Currently unavailable' : 'Available for booking';
-
-                modalContent.innerHTML = `
-                    <img src="${imageList[0]}" alt="${room.name || 'Room'}">
-                    <div class="room-modal-body">
-                        <h3>${room.name || 'Resort Room'}</h3>
-                        <p class="price">From PHP ${Number(room.pricePerNight || 0).toLocaleString()} / night</p>
-                        <p>${room.description || 'A relaxing retreat designed for comfort and scenic views.'}</p>
-                        <div class="meta-list">
-                            <span>${room.type || 'Resort Room'}</span>
-                            <span>${room.capacity || 2} Guests</span>
-                            <span>${status}</span>
-                        </div>
-                        <div class="meta-list">
-                            ${amenities.slice(0, 6).map((item) => `<span>${item}</span>`).join('')}
-                        </div>
-                        <div class="room-modal-gallery">
-                            ${imageList.map((image) => `<img src="${image}" alt="${room.name || 'Room'} photo">`).join('')}
-                        </div>
-                    </div>
-                `;
-                modalOverlay.classList.add('active');
-            }
-
-            function closeModal() {
-                modalOverlay.classList.remove('active');
-                modalContent.innerHTML = '';
-            }
-
-            modalClose.addEventListener('click', closeModal);
-            modalOverlay.addEventListener('click', (event) => {
-                if (event.target === modalOverlay) closeModal();
-            });
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape') closeModal();
-            });
-
-            try {
-                const res = await fetch('/api/rooms');
-                if (!res.ok) throw new Error('Unable to load rooms');
-                const rooms = await res.json();
-
-                if (!Array.isArray(rooms) || !rooms.length) {
-                    container.innerHTML = '<div class="col-12"><div class="alert alert-secondary">No rooms available right now.</div></div>';
-                    return;
-                }
-
-                container.innerHTML = rooms.map((room) => {
-                    const image = (Array.isArray(room.images) && room.images.filter(Boolean).length ? room.images.filter(Boolean)[0] : room.image) || 'img/rooms/1.png';
-                    const amenities = Array.isArray(room.amenities) ? room.amenities : [];
-                    const status = room.available === false ? 'Unavailable' : 'Available';
-                    const statusClass = room.available === false ? 'text-danger' : 'text-success';
-                    const description = (room.description || 'A relaxing retreat designed for comfort and scenic views.').slice(0, 160);
-
-                    return `
-                        <div class="col-xl-4 col-md-6">
-                            <div class="single_offers" style="height:100%;cursor:pointer;" data-room='${JSON.stringify(room).replace(/'/g, '&apos;')}'>
-                                <div class="about_thumb">
-                                    <img src="${image}" alt="${room.name || 'Room'}" style="height:220px;object-fit:cover;width:100%;">
-                                </div>
-                                <h3>${room.name || 'Resort Room'}</h3>
-                                <p style="color:#777;min-height:72px;">${description}${(room.description || '').length > 160 ? '…' : ''}</p>
-                                <ul>
-                                    <li>${room.type || 'Resort Room'}</li>
-                                    <li>${room.capacity || 2} Guests</li>
-                                    <li>${amenities.slice(0, 3).join(' • ') || 'Sea view • Comfort • Relaxation'}</li>
-                                </ul>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="${statusClass}">${status}</span>
-                                    <span class="font-weight-bold">From PHP ${Number(room.pricePerNight || 0).toLocaleString()}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                container.querySelectorAll('[data-room]').forEach((card) => {
-                    card.addEventListener('click', () => {
-                        try {
-                            const room = JSON.parse(card.getAttribute('data-room'));
-                            openModal(room);
-                        } catch (error) {
-                            console.error(error);
-                        }
-                    });
-                });
-            } catch (err) {
-                console.error(err);
-                container.innerHTML = '<div class="col-12"><div class="alert alert-danger">Unable to load rooms at the moment.</div></div>';
-            }
-        }
-
-        loadRooms();
-    </script>
-
-<script src="js/copyright.js"></script>
 </body>
 
 </html>

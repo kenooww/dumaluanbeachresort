@@ -154,9 +154,16 @@
         <!-- About Us -->
         <div class="settings-card">
           <h2>About Us</h2>
-          <label>About Us story <span class="hint">(shown on the About page)</span>
+          <label>About Us story <span class="hint">(shown on the Home page)</span>
             <textarea name="aboutUs" id="settingsAboutUs" rows="6" placeholder="Tell guests who you are, your history, and what makes the resort special."></textarea>
           </label>
+          <label>About Us Part || <span class="hint">(shown on the About page)</span>
+            <textarea name="aboutUs2" id="settingsAboutUs2" rows="10" placeholder="Tell guests who you are, your history, and what makes the resort special."></textarea>
+          </label>
+          <label>About Us images <span class="hint">(upload multiple images shown on the About section)</span>
+            <input type="file" name="aboutImages" id="settingsAboutImages" accept="image/png,image/jpeg,image/webp,image/gif" multiple>
+          </label>
+          <div id="settingsAboutImagesPreview" class="about-images-preview"></div>
           <label>Mission statement
             <textarea name="mission" id="settingsMission" rows="3" placeholder="What is the resort's mission?"></textarea>
           </label>

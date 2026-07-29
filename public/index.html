@@ -34,6 +34,27 @@
     .scroll-highlight {
     animation: sectionHighlight 1.2s ease-out;
     }
+
+    .about_area#about_us .about_thumb {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .about_area#about_us .about-image-item {
+      flex: 1 1 calc(50% - 16px);
+      min-width: 180px;
+      max-width: 360px;
+      position: relative;
+    }
+
+    .about_area#about_us .about-image-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 16px;
+    }
     </style>
 </head>
 
@@ -53,7 +74,7 @@
                                 <nav>
                                     <ul id="navigation">
                                       <li><a href="index.html">home</a></li>
-                                      <li><a href="#about_us" class="scroll-link">About</a></li>
+                                      <li><a href="about.html">About</a></li>
                                       <li><a href="rooms.html">rooms</a></li>
                                       <li><a href="blog.html">Blog</a></li>
                                       <li><a href="#contact" class="scroll-link">Contact</a></li>
@@ -119,8 +140,8 @@
                             <h3>A Home by the Sea <br>in Panglao 
                                 with Nature</h3>
                         </div>
-                        <p>Dumaluan Beach Resort sits along the powder-white sands of Panglao Island, Bohol — just minutes from Alona Beach and a short trip to the island's famous Chocolate Hills and tarsier sanctuaries. We've built our resort around one simple idea: family vacations should feel easy, relaxed, and full of good memories. Wake up to the sound of waves, spend your day by the pool or on the beach, and let the kids run free while you unwind with a cold drink and an ocean view.</p>
-                        <a href="#" class="line-button">Learn More</a>
+                        <p></p>
+                        <a href="about.html" class="line-button">Learn More</a>
                     </div>
                 </div>
                 <div class="col-xl-7 col-lg-7">
@@ -131,6 +152,7 @@
                         <div class="img_2">
                             <img src="img/about/about_2.png" alt="">
                         </div>
+                        
                     </div>
                 </div>
             </div>

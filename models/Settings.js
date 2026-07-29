@@ -10,6 +10,13 @@ const settingsSchema = new mongoose.Schema(
     faviconPublicId: { type: String, default: '' },
 
     aboutUs: { type: String, default: '' },
+    aboutUs2: { type: String, default: '' },
+    aboutImages: [
+      {
+        imageUrl: { type: String, default: '' },
+        imagePublicId: { type: String, default: '' },
+      },
+    ],
     mission: { type: String, default: '' },
     vision: { type: String, default: '' },
     yearEstablished: { type: Number },
