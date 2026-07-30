@@ -174,7 +174,7 @@ router.put(
         if (settings.logoPublicId) {
           cloudinary.uploader.destroy(settings.logoPublicId).catch(() => {});
         }
-        const uploaded = await uploadBufferToCloudinary(req.files.logo[0].buffer, 'settings');
+        const uploaded = await uploadBufferToCloudinary(req.files.logo[0].buffer, 'settings', req.files.logo[0].mimetype);
         settings.logoUrl = uploaded.secure_url;
         settings.logoPublicId = uploaded.public_id;
       }
@@ -182,7 +182,7 @@ router.put(
         if (settings.faviconPublicId) {
           cloudinary.uploader.destroy(settings.faviconPublicId).catch(() => {});
         }
-        const uploaded = await uploadBufferToCloudinary(req.files.favicon[0].buffer, 'settings');
+        const uploaded = await uploadBufferToCloudinary(req.files.favicon[0].buffer, 'settings', req.files.favicon[0].mimetype);
         settings.faviconUrl = uploaded.secure_url;
         settings.faviconPublicId = uploaded.public_id;
       }

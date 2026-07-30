@@ -51,7 +51,7 @@
         image.src = imageUrl;
       });
 
-      const maxDimension = 1400;
+      const maxDimension = 1100;
       let width = img.width;
       let height = img.height;
 
@@ -67,7 +67,7 @@
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
 
-      const quality = file.size > 800 * 1024 ? 0.75 : 0.85;
+      const quality = file.size > 900 * 1024 ? 0.65 : (file.size > 500 * 1024 ? 0.75 : 0.85);
       const blob = await new Promise((resolve) => {
         canvas.toBlob((result) => resolve(result), file.type || 'image/jpeg', quality);
       });
