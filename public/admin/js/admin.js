@@ -328,6 +328,38 @@ function initDashboard() {
   // =====================================================
   // INQUIRIES
   // =====================================================
+  const inquiryModalOverlay = document.getElementById('inquiryModalOverlay');
+  const inquiryModalBody = document.getElementById('inquiryModalBody');
+
+  function openInquiryModal(message) {
+    const createdAt = formatDate(message.createdAt);
+    inquiryModalBody.innerHTML = `
+      <div class="detail-stack">
+        <div>
+          <strong>Name</strong>
+          <p>${escapeHtml(message.name || '—')}</p>
+        </div>
+        <div>
+          <strong>Email</strong>
+          <p>${escapeHtml(message.email || '—')}</p>
+        </div>
+        <div>
+          <strong>Subject</strong>
+          <p>${escapeHtml(message.subject || 'No subject')}</p>
+        </div>
+        <div>
+          <strong>Received</strong>
+          <p>${escapeHtml(createdAt)}</p>
+        </div>
+        <div>
+          <strong>Message</strong>
+          <p style="white-space: pre-wrap;">${escapeHtml(message.message || '—')}</p>
+        </div>
+      </div>
+    `;
+    openModal(inquiryModalOverlay);
+  }
+
   async function loadInquiriesTable() {
     const tbody = document.getElementById('inquiriesTableBody');
     tbody.innerHTML = '<tr><td colspan="6" class="muted-row">Loading inquiries...</td></tr>';
@@ -346,6 +378,9 @@ function initDashboard() {
         });
         document.querySelector(`[data-delete-inquiry="${message._id}"]`)?.addEventListener('click', () => {
           deleteInquiry(message._id, message.name);
+        });
+        document.querySelector(`[data-view-inquiry="${message._id}"]`)?.addEventListener('click', () => {
+          openInquiryModal(message);
         });
       });
     } catch (err) {
@@ -370,6 +405,7 @@ function initDashboard() {
         <td>${status}</td>
         <td>
           <div class="row-actions">
+            <button data-view-inquiry="${message._id}">View</button>
             <button data-toggle-inquiry="${message._id}">${toggleLabel}</button>
             <button class="danger" data-delete-inquiry="${message._id}">Delete</button>
           </div>
