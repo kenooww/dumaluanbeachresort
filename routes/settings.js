@@ -2,7 +2,7 @@ const express = require('express');
 const Settings = require('../models/Settings');
 
 const { protect } = require('../middleware/auth');
-const { settingsUpload, cloudinary } = require('../utils/upload');
+const { settingsUpload, cloudinary, uploadBufferToCloudinary } = require('../utils/upload');
 
 const router = express.Router();
 
@@ -91,8 +91,10 @@ router.put(
       if (Array.isArray(sliderItemsPayload)) {
         const files = req.files?.sliderImages || [];
         let uploadCount = 0;
-        const finalSliderItems = sliderItemsPayload.reduce((acc, item, idx) => {
-          if (!item) return acc;
+        const finalSliderItems = [];
+
+        for (const item of sliderItemsPayload) {
+          if (!item) continue;
           const sliderText = String(item.sliderText || '').trim();
           const sliderSubtitle = String(item.sliderSubtitle || '').trim();
           let imageUrl = String(item.imageUrl || '').trim();
@@ -100,22 +102,23 @@ router.put(
 
           if (item.newImageIndex !== undefined && files[item.newImageIndex]) {
             const file = files[item.newImageIndex];
-            if (imagePublicId && imagePublicId !== file.filename) {
+            if (imagePublicId && imagePublicId !== file.originalname) {
               cloudinary.uploader.destroy(imagePublicId).catch(() => {});
             }
-            imageUrl = file.path;
-            imagePublicId = file.filename;
+            const uploaded = await uploadBufferToCloudinary(file.buffer, 'settings');
+            imageUrl = uploaded.secure_url;
+            imagePublicId = uploaded.public_id;
           } else if (uploadCount < files.length && !imageUrl) {
             const file = files[uploadCount];
-            imageUrl = file.path;
-            imagePublicId = file.filename;
+            const uploaded = await uploadBufferToCloudinary(file.buffer, 'settings');
+            imageUrl = uploaded.secure_url;
+            imagePublicId = uploaded.public_id;
             uploadCount += 1;
           }
 
-          if (!imageUrl) return acc;
-          acc.push({ imageUrl, imagePublicId, sliderText, sliderSubtitle });
-          return acc;
-        }, []);
+          if (!imageUrl) continue;
+          finalSliderItems.push({ imageUrl, imagePublicId, sliderText, sliderSubtitle });
+        }
 
         const existingPublicIds = new Set((finalSliderItems || []).map((item) => item.imagePublicId).filter(Boolean));
         (settings.sliderItems || []).forEach((oldItem) => {
@@ -130,29 +133,32 @@ router.put(
       if (Array.isArray(aboutImagesPayload)) {
         const files = req.files?.aboutImages || [];
         let uploadCount = 0;
-        const finalAboutImages = aboutImagesPayload.reduce((acc, item) => {
-          if (!item) return acc;
+        const finalAboutImages = [];
+
+        for (const item of aboutImagesPayload) {
+          if (!item) continue;
           let imageUrl = String(item.imageUrl || '').trim();
           let imagePublicId = String(item.imagePublicId || '').trim();
 
           if (item.newImageIndex !== undefined && files[item.newImageIndex]) {
             const file = files[item.newImageIndex];
-            if (imagePublicId && imagePublicId !== file.filename) {
+            if (imagePublicId && imagePublicId !== file.originalname) {
               cloudinary.uploader.destroy(imagePublicId).catch(() => {});
             }
-            imageUrl = file.path;
-            imagePublicId = file.filename;
+            const uploaded = await uploadBufferToCloudinary(file.buffer, 'settings');
+            imageUrl = uploaded.secure_url;
+            imagePublicId = uploaded.public_id;
           } else if (uploadCount < files.length && !imageUrl) {
             const file = files[uploadCount];
-            imageUrl = file.path;
-            imagePublicId = file.filename;
+            const uploaded = await uploadBufferToCloudinary(file.buffer, 'settings');
+            imageUrl = uploaded.secure_url;
+            imagePublicId = uploaded.public_id;
             uploadCount += 1;
           }
 
-          if (!imageUrl) return acc;
-          acc.push({ imageUrl, imagePublicId });
-          return acc;
-        }, []);
+          if (!imageUrl) continue;
+          finalAboutImages.push({ imageUrl, imagePublicId });
+        }
 
         const existingPublicIds = new Set((finalAboutImages || []).map((item) => item.imagePublicId).filter(Boolean));
         (settings.aboutImages || []).forEach((oldItem) => {
@@ -168,15 +174,17 @@ router.put(
         if (settings.logoPublicId) {
           cloudinary.uploader.destroy(settings.logoPublicId).catch(() => {});
         }
-        settings.logoUrl = req.files.logo[0].path;
-        settings.logoPublicId = req.files.logo[0].filename;
+        const uploaded = await uploadBufferToCloudinary(req.files.logo[0].buffer, 'settings');
+        settings.logoUrl = uploaded.secure_url;
+        settings.logoPublicId = uploaded.public_id;
       }
       if (req.files?.favicon?.[0]) {
         if (settings.faviconPublicId) {
           cloudinary.uploader.destroy(settings.faviconPublicId).catch(() => {});
         }
-        settings.faviconUrl = req.files.favicon[0].path;
-        settings.faviconPublicId = req.files.favicon[0].filename;
+        const uploaded = await uploadBufferToCloudinary(req.files.favicon[0].buffer, 'settings');
+        settings.faviconUrl = uploaded.secure_url;
+        settings.faviconPublicId = uploaded.public_id;
       }
 
       await settings.save();
