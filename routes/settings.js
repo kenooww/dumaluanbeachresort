@@ -194,9 +194,11 @@ router.put(
       const message = err?.code === 'LIMIT_FILE_SIZE'
         ? 'Upload failed because the file is too large.'
         : (err?.message || 'Unable to save settings.');
+
       res.status(500).json({
         message,
-        ...(process.env.NODE_ENV !== 'production' ? { stack: err.stack } : {}),
+        error: err?.name || 'UnknownError',
+        ...(process.env.NODE_ENV !== 'production' ? { stack: err?.stack } : {}),
       });
     }
   }

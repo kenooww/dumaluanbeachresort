@@ -39,6 +39,52 @@
     if (errorEl) errorEl.textContent = msg || "";
   }
 
+  async function compressImageFile(file) {
+    if (!file || !file.type || !file.type.startsWith('image/')) return file;
+
+    const imageUrl = URL.createObjectURL(file);
+    try {
+      const img = await new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = reject;
+        image.src = imageUrl;
+      });
+
+      const maxDimension = 1400;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > maxDimension || height > maxDimension) {
+        const ratio = Math.min(maxDimension / width, maxDimension / height);
+        width = Math.max(1, Math.round(width * ratio));
+        height = Math.max(1, Math.round(height * ratio));
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+
+      const quality = file.size > 800 * 1024 ? 0.75 : 0.85;
+      const blob = await new Promise((resolve) => {
+        canvas.toBlob((result) => resolve(result), file.type || 'image/jpeg', quality);
+      });
+
+      if (!blob) return file;
+      return new File([blob], file.name, { type: blob.type || file.type, lastModified: Date.now() });
+    } finally {
+      URL.revokeObjectURL(imageUrl);
+    }
+  }
+
+  async function prepareUploadFile(file) {
+    if (!file) return file;
+    const compressed = await compressImageFile(file);
+    return compressed.size < file.size ? compressed : file;
+  }
+
   function createSliderItemElement(item, index) {
     const wrapper = document.createElement('div');
     wrapper.className = 'slider-item';
@@ -101,15 +147,17 @@
     });
     row3.appendChild(removeBtn);
 
-    imageInput.addEventListener('change', () => {
+    imageInput.addEventListener('change', async () => {
       const file = imageInput.files && imageInput.files[0];
       if (!file) {
         if (!item.imageUrl) preview.style.display = 'none';
         return;
       }
-      preview.src = URL.createObjectURL(file);
+      const compressedFile = await prepareUploadFile(file);
+      preview.src = URL.createObjectURL(compressedFile);
       preview.style.display = 'block';
       item.newImage = true;
+      item.file = compressedFile;
     });
 
     wrapper.appendChild(row1);
@@ -233,9 +281,10 @@
         sliderSubtitle: currentSubtitle,
       };
 
-      if (selectedFile) {
+      const uploadFile = item.file || selectedFile;
+      if (uploadFile) {
         payloadItem.newImageIndex = fileCounter;
-        formData.append('sliderImages', selectedFile);
+        formData.append('sliderImages', uploadFile);
         fileCounter += 1;
       }
 
@@ -265,11 +314,12 @@
   }
 
   if (aboutImagesInput) {
-    aboutImagesInput.addEventListener('change', () => {
+    aboutImagesInput.addEventListener('change', async () => {
       const files = Array.from(aboutImagesInput.files || []);
-      files.forEach((file) => {
-        aboutImagesState.push({ imageUrl: '', imagePublicId: '', file });
-      });
+      for (const file of files) {
+        const compressedFile = await prepareUploadFile(file);
+        aboutImagesState.push({ imageUrl: '', imagePublicId: '', file: compressedFile });
+      }
       aboutImagesInput.value = '';
       renderAboutImages();
     });
@@ -329,6 +379,20 @@
 
     try {
       const formData = new FormData(form);
+      const logoInput = document.getElementById('settingsLogo');
+      const faviconInput = document.getElementById('settingsFavicon');
+
+      if (logoInput?.files?.[0]) {
+        const compressedLogo = await prepareUploadFile(logoInput.files[0]);
+        formData.delete('logo');
+        formData.append('logo', compressedLogo, compressedLogo.name || 'logo');
+      }
+      if (faviconInput?.files?.[0]) {
+        const compressedFavicon = await prepareUploadFile(faviconInput.files[0]);
+        formData.delete('favicon');
+        formData.append('favicon', compressedFavicon, compressedFavicon.name || 'favicon');
+      }
+
       appendSliderItemsToForm(formData);
       appendAboutImagesToForm(formData);
       const res = await fetch("/api/settings", {
