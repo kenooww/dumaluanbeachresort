@@ -1,7 +1,7 @@
 const express = require('express');
 const Room = require('../models/Room');
 const { protect } = require('../middleware/auth');
-const { upload, cloudinary } = require('../utils/upload');
+const { upload, cloudinary, uploadBufferToCloudinary } = require('../utils/upload');
 
 const router = express.Router();
 
@@ -22,10 +22,17 @@ router.get('/:id', async (req, res) => {
 router.post('/', protect, upload.any(), async (req, res) => {
   try {
     const { name, type, description, pricePerNight, capacity, amenities, available } = req.body;
-    // multer with .any() sets req.files to an array of files
     const uploadedFiles = Array.isArray(req.files) ? req.files.slice(0, 8) : [];
-    const imageUrls = uploadedFiles.map((file) => file.path);
-    const imagePublicIds = uploadedFiles.map((file) => file.filename);
+
+    const uploadedResults = [];
+    for (const file of uploadedFiles) {
+      if (!file?.buffer) continue;
+      const uploaded = await uploadBufferToCloudinary(file.buffer, 'rooms', file.mimetype);
+      uploadedResults.push({ imageUrl: uploaded.secure_url, imagePublicId: uploaded.public_id });
+    }
+
+    const imageUrls = uploadedResults.map((item) => item.imageUrl);
+    const imagePublicIds = uploadedResults.map((item) => item.imagePublicId);
 
     const room = await Room.create({
       name,
@@ -79,9 +86,16 @@ router.put('/:id', protect, upload.any(), async (req, res) => {
       const publicIdsToDelete = [...new Set([...(room.imagePublicIds || []), room.imagePublicId].filter(Boolean))];
       await Promise.all(publicIdsToDelete.map((publicId) => cloudinary.uploader.destroy(publicId).catch(() => {})));
 
-      room.images = uploadedFiles.map((file) => file.path);
+      const uploadedResults = [];
+      for (const file of uploadedFiles) {
+        if (!file?.buffer) continue;
+        const uploaded = await uploadBufferToCloudinary(file.buffer, 'rooms', file.mimetype);
+        uploadedResults.push({ imageUrl: uploaded.secure_url, imagePublicId: uploaded.public_id });
+      }
+
+      room.images = uploadedResults.map((item) => item.imageUrl);
       room.image = room.images[0] || '';
-      room.imagePublicIds = uploadedFiles.map((file) => file.filename);
+      room.imagePublicIds = uploadedResults.map((item) => item.imagePublicId);
       room.imagePublicId = room.imagePublicIds[0] || '';
     }
 

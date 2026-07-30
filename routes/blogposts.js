@@ -1,7 +1,7 @@
 const express = require('express');
 const BlogPost = require('../models/BlogPost');
 const { protect } = require('../middleware/auth');
-const { blogUpload, cloudinary } = require('../utils/upload');
+const { blogUpload, cloudinary, uploadBufferToCloudinary } = require('../utils/upload');
 
 const router = express.Router();
 
@@ -57,6 +57,15 @@ router.use(protect);
 router.post('/', blogUpload.single('image'), async (req, res) => {
   try {
     const { title, category, excerpt, content, author, published } = req.body;
+    let image = '';
+    let imagePublicId = '';
+
+    if (req.file?.buffer) {
+      const uploaded = await uploadBufferToCloudinary(req.file.buffer, 'blog', req.file.mimetype);
+      image = uploaded.secure_url;
+      imagePublicId = uploaded.public_id;
+    }
+
     const post = await BlogPost.create({
       title,
       category,
@@ -64,12 +73,13 @@ router.post('/', blogUpload.single('image'), async (req, res) => {
       content,
       author,
       published: published === undefined ? true : published === 'true' || published === true,
-      image: req.file ? req.file.path : '',
-      imagePublicId: req.file ? req.file.filename : '',
+      image,
+      imagePublicId,
     });
     res.status(201).json(post);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    console.error('POST /api/blog-posts error:', err);
+    res.status(500).json({ message: err.message, stack: err.stack });
   }
 });
 
@@ -86,12 +96,13 @@ router.put('/:id', blogUpload.single('image'), async (req, res) => {
     if (author !== undefined) post.author = author;
     if (published !== undefined) post.published = published === 'true' || published === true;
 
-    if (req.file) {
+    if (req.file?.buffer) {
       if (post.imagePublicId) {
         cloudinary.uploader.destroy(post.imagePublicId).catch(() => {});
       }
-      post.image = req.file.path;
-      post.imagePublicId = req.file.filename;
+      const uploaded = await uploadBufferToCloudinary(req.file.buffer, 'blog', req.file.mimetype);
+      post.image = uploaded.secure_url;
+      post.imagePublicId = uploaded.public_id;
     }
 
     await post.save();
