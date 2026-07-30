@@ -183,8 +183,11 @@ router.put(
       res.json(settings);
     } catch (err) {
       console.error('Settings save failed:', err);
+      const message = err?.code === 'LIMIT_FILE_SIZE'
+        ? 'Upload failed because the file is too large.'
+        : (err?.message || 'Unable to save settings.');
       res.status(500).json({
-        message: err.message || 'Unable to save settings.',
+        message,
         ...(process.env.NODE_ENV !== 'production' ? { stack: err.stack } : {}),
       });
     }
