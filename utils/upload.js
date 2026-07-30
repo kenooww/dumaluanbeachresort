@@ -8,14 +8,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-function ensureCloudinaryConfigured() {
-  if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
-    throw new Error('Cloudinary is not configured. Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in the deployment environment.');
-  }
-}
-
-ensureCloudinaryConfigured();
-
 function makeUpload(folder) {
   const storage = new CloudinaryStorage({
     cloudinary,
