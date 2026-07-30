@@ -2,7 +2,7 @@ const express = require('express');
 const Settings = require('../models/Settings');
 
 const { protect } = require('../middleware/auth');
-const { upload, cloudinary } = require('../utils/upload'); // same helper used by rooms/posts
+const { settingsUpload, cloudinary } = require('../utils/upload');
 
 const router = express.Router();
 
@@ -20,7 +20,7 @@ router.get('/', async (req, res) => {
 router.put(
   '/',
   protect,
-  upload.fields([
+  settingsUpload.fields([
     { name: 'logo', maxCount: 1 },
     { name: 'favicon', maxCount: 1 },
     { name: 'sliderImages', maxCount: 10 },

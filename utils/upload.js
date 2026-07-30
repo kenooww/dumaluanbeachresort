@@ -21,11 +21,11 @@ function makeUpload(folder) {
 
   return multer({
     storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
   });
 }
 
 const upload = makeUpload('rooms');
 const blogUpload = makeUpload('blog');
+const settingsUpload = makeUpload('settings');
 
-module.exports = { upload, blogUpload, cloudinary };
+module.exports = { upload, blogUpload, settingsUpload, cloudinary };
