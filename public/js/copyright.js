@@ -24,14 +24,19 @@
 
   const setSocialLinks = (settings) => {
     const socialMap = [
-      { key: 'facebookUrl', selector: 'facebook' },
-      { key: 'twitterUrl', selector: 'twitter' },
-      { key: 'instagramUrl', selector: 'instagram' },
+      { key: 'facebookUrl', selectors: ['facebook'] },
+      { key: 'twitterUrl', selectors: ['twitter', 'x-twitter', 'fa-x-twitter'] },
+      { key: 'instagramUrl', selectors: ['instagram'] },
+      { key: 'tiktokUrl', selectors: ['tiktok'] },
+      { key: 'youtubeUrl', selectors: ['youtube'] },
+      { key: 'tripadvisorUrl', selectors: ['tripadvisor'] },
     ];
 
     socialLinks.forEach((link) => {
       const icon = link.querySelector('i')?.className || link.className || '';
-      const match = socialMap.find((entry) => icon.includes(entry.selector));
+      const text = (link.textContent || '').trim().toLowerCase();
+      const combined = `${icon} ${text}`.toLowerCase();
+      const match = socialMap.find((entry) => entry.selectors.some((selector) => combined.includes(selector)));
       if (!match) return;
 
       const url = settings?.[match.key]?.trim();
@@ -39,6 +44,9 @@
         link.href = url;
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
+      } else {
+        link.removeAttribute('href');
+        link.classList.add('disabled');
       }
     });
   };

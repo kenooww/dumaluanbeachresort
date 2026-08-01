@@ -28,6 +28,15 @@
     "footerText", "copyrightText"
   ];
 
+  const fieldIdMap = {
+    facebookUrl: 'settingsFacebook',
+    instagramUrl: 'settingsInstagram',
+    tiktokUrl: 'settingsTiktok',
+    youtubeUrl: 'settingsYoutube',
+    twitterUrl: 'settingsTwitter',
+    tripadvisorUrl: 'settingsTripadvisor',
+  };
+
   const sliderItemsContainer = document.getElementById('settingsSliderItems');
   const addSliderItemBtn = document.getElementById('addSliderItemBtn');
   const aboutImagesInput = document.getElementById('settingsAboutImages');
@@ -332,7 +341,8 @@
       const data = await res.json();
 
       fieldIds.forEach((id) => {
-        const el = document.getElementById("settings" + id.charAt(0).toUpperCase() + id.slice(1));
+        const mappedId = fieldIdMap[id] || ("settings" + id.charAt(0).toUpperCase() + id.slice(1));
+        const el = document.getElementById(mappedId);
         if (el && data[id] !== undefined && data[id] !== null) {
           el.value = data[id];
         }
