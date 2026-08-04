@@ -173,6 +173,22 @@
           <label>Year established<input type="number" name="yearEstablished" id="settingsYearEstablished" min="1900" max="2100" placeholder="2010"></label>
         </div>
 
+        <!-- Foods -->
+        <div class="settings-card">
+          <h2>Foods</h2>
+          <label>Foods title<input type="text" name="foodsTitle" id="settingsFoodsTitle" placeholder="Fresh local flavors"></label>
+          <label>Foods description
+            <textarea name="foodsDescription" id="settingsFoodsDescription" rows="4" placeholder="Add an intro for the foods section."></textarea>
+          </label>
+          <label>Foods description 2
+            <textarea name="foodsDescription2" id="settingsFoodsDescription2" rows="4" placeholder="Add a second paragraph or highlights."></textarea>
+          </label>
+          <label>Foods images <span class="hint">(upload multiple images shown for the foods section)</span>
+            <input type="file" name="foodsImages" id="settingsFoodsImages" accept="image/png,image/jpeg,image/webp,image/gif" multiple>
+          </label>
+          <div id="settingsFoodsImagesPreview" class="about-images-preview"></div>
+        </div>
+
         <!-- Homepage Slider -->
         <div class="settings-card">
           <h2>Homepage Slider</h2>
@@ -302,10 +318,10 @@
       <label>Room name<input type="text" name="name" id="roomName" required placeholder="Sunrise Beachfront Bungalow"></label>
       <label>Room type
         <select name="type" id="roomType">
-          <option>Beachfront Bungalow</option>
-          <option>Garden Villa</option>
-          <option>Overwater Suite</option>
-          <option>Family Cabana</option>
+          <option>Dalmacia Room</option>
+          <option>Family Deluxe Room</option>
+          <option>Standard Deluxe Room</option>
+          <option>Standard Family Room</option>
           <option>Standard Room</option>
         </select>
       </label>

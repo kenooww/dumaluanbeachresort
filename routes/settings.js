@@ -25,6 +25,7 @@ router.put(
     { name: 'favicon', maxCount: 1 },
     { name: 'sliderImages', maxCount: 10 },
     { name: 'aboutImages', maxCount: 10 },
+    { name: 'foodsImages', maxCount: 10 },
   ]),
   async (req, res) => {
     try {
@@ -33,7 +34,7 @@ router.put(
 
       const fields = [
         'companyName', 'tagline',
-        'aboutUs','aboutUs2', 'mission', 'vision', 'yearEstablished',
+        'aboutUs','aboutUs2', 'foodsTitle', 'foodsDescription', 'foodsDescription2', 'mission', 'vision', 'yearEstablished',
         'address', 'city', 'province', 'postalCode', 'country',
         'phone', 'whatsapp', 'email', 'reservationsEmail',
         'latitude', 'longitude', 'mapsEmbedUrl',
@@ -75,6 +76,20 @@ router.put(
         }
       })();
 
+      const foodsImagesPayload = (() => {
+        const raw = typeof req.body.foodsImagesData === 'string'
+          ? req.body.foodsImagesData.trim()
+          : (req.body.foodsImagesData || req.body.foodsImages);
+        if (!raw) return null;
+        if (Array.isArray(raw)) return raw;
+        try {
+          return JSON.parse(raw);
+        } catch (parseErr) {
+          console.error('Invalid foodsImages payload:', parseErr, raw);
+          return null;
+        }
+      })();
+
       if (req.body.sliderItems) {
         console.debug('sliderItems raw payload:', req.body.sliderItems);
       }
@@ -86,6 +101,9 @@ router.put(
       }
       if (req.files?.aboutImages) {
         console.debug('aboutImages count:', req.files.aboutImages.length, 'names:', req.files.aboutImages.map((f) => f.originalname));
+      }
+      if (req.files?.foodsImages) {
+        console.debug('foodsImages count:', req.files.foodsImages.length, 'names:', req.files.foodsImages.map((f) => f.originalname));
       }
 
       if (Array.isArray(sliderItemsPayload)) {
@@ -168,6 +186,46 @@ router.put(
         });
 
         settings.aboutImages = finalAboutImages;
+      }
+
+      if (Array.isArray(foodsImagesPayload)) {
+        const files = req.files?.foodsImages || [];
+        let uploadCount = 0;
+        const finalFoodsImages = [];
+
+        for (const item of foodsImagesPayload) {
+          if (!item) continue;
+          let imageUrl = String(item.imageUrl || '').trim();
+          let imagePublicId = String(item.imagePublicId || '').trim();
+
+          if (item.newImageIndex !== undefined && files[item.newImageIndex]) {
+            const file = files[item.newImageIndex];
+            if (imagePublicId && imagePublicId !== file.originalname) {
+              cloudinary.uploader.destroy(imagePublicId).catch(() => {});
+            }
+            const uploaded = await uploadBufferToCloudinary(file.buffer, 'settings', file.mimetype);
+            imageUrl = uploaded.secure_url;
+            imagePublicId = uploaded.public_id;
+          } else if (uploadCount < files.length && !imageUrl) {
+            const file = files[uploadCount];
+            const uploaded = await uploadBufferToCloudinary(file.buffer, 'settings', file.mimetype);
+            imageUrl = uploaded.secure_url;
+            imagePublicId = uploaded.public_id;
+            uploadCount += 1;
+          }
+
+          if (!imageUrl) continue;
+          finalFoodsImages.push({ imageUrl, imagePublicId });
+        }
+
+        const existingPublicIds = new Set((finalFoodsImages || []).map((item) => item.imagePublicId).filter(Boolean));
+        (settings.foodsImages || []).forEach((oldItem) => {
+          if (oldItem.imagePublicId && !existingPublicIds.has(oldItem.imagePublicId)) {
+            cloudinary.uploader.destroy(oldItem.imagePublicId).catch(() => {});
+          }
+        });
+
+        settings.foodsImages = finalFoodsImages;
       }
 
       if (req.files?.logo?.[0]) {

@@ -5,7 +5,17 @@ const roomSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     type: {
       type: String,
-      enum: ['Beachfront Bungalow', 'Garden Villa', 'Overwater Suite', 'Family Cabana', 'Standard Room'],
+      enum: [
+        'Dalmacia Room',
+        'Family Deluxe Room',
+        'Standard Deluxe Room',
+        'Standard Family Room',
+        'Standard Room',
+        'Beachfront Bungalow',
+        'Garden Villa',
+        'Overwater Suite',
+        'Family Cabana',
+      ],
       default: 'Standard Room',
     },
     description: { type: String, required: true },

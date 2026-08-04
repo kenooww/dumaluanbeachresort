@@ -219,6 +219,45 @@
     }
   };
 
+  const setFoodsSection = (settings) => {
+    const titleElement = document.getElementById('foods_title');
+    const descriptionElement = document.getElementById('foods_description');
+    const description2Element = document.getElementById('foods_description2');
+    const imagesContainer = document.getElementById('foods_images');
+
+    if (titleElement) {
+      titleElement.textContent = settings?.foodsTitle?.trim() || 'Fresh local flavors';
+    }
+
+    if (descriptionElement) {
+      const description = settings?.foodsDescription?.trim();
+      descriptionElement.innerHTML = description ? escapeHtml(description).replace(/\n/g, '<br>') : '';
+    }
+
+    if (description2Element) {
+      const description2 = settings?.foodsDescription2?.trim();
+      description2Element.innerHTML = description2 ? escapeHtml(description2).replace(/\n/g, '<br>') : '';
+    }
+
+    if (imagesContainer) {
+      const foodsImages = Array.isArray(settings?.foodsImages)
+        ? settings.foodsImages.filter((item) => item?.imageUrl)
+        : [];
+
+      if (foodsImages.length) {
+        imagesContainer.innerHTML = foodsImages
+          .map((item) => `
+            <div class="about-image-item">
+              <img src="${escapeHtml(item.imageUrl)}" alt="Foods image">
+            </div>
+          `)
+          .join('');
+      } else {
+        imagesContainer.innerHTML = '';
+      }
+    }
+  };
+
   const setContactInfo = (settings) => {
     const contactBlocks = Array.from(document.querySelectorAll('.media.contact-info'));
     contactBlocks.forEach((block) => {
@@ -262,6 +301,7 @@
     setSliderItems(settings);
     setAboutSection(settings);
     setVisionMissionSection(settings);
+    setFoodsSection(settings);
   } catch (error) {
     const settings = {};
     const text = fallbackText(settings);
@@ -276,5 +316,6 @@
     setSliderItems(settings);
     setAboutSection(settings);
     setVisionMissionSection(settings);
+    setFoodsSection(settings);
   }
 })();

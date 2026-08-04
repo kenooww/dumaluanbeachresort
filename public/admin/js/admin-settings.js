@@ -16,7 +16,7 @@
 
   const fieldIds = [
     "companyName", "tagline",
-    "aboutUs",'aboutUs2', "mission", "vision", "yearEstablished",
+    "aboutUs",'aboutUs2', "foodsTitle", "foodsDescription", "foodsDescription2", "mission", "vision", "yearEstablished",
     "address", "city", "province", "postalCode", "country",
     "phone", "whatsapp", "email", "reservationsEmail",
     "latitude", "longitude", "mapsEmbedUrl",
@@ -41,8 +41,11 @@
   const addSliderItemBtn = document.getElementById('addSliderItemBtn');
   const aboutImagesInput = document.getElementById('settingsAboutImages');
   const aboutImagesPreview = document.getElementById('settingsAboutImagesPreview');
+  const foodsImagesInput = document.getElementById('settingsFoodsImages');
+  const foodsImagesPreview = document.getElementById('settingsFoodsImagesPreview');
   let sliderItemsState = [];
   let aboutImagesState = [];
+  let foodsImagesState = [];
 
   function setError(msg) {
     if (errorEl) errorEl.textContent = msg || "";
@@ -240,6 +243,58 @@
     renderAboutImages();
   }
 
+  function createFoodsImagePreview(item, index) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'about-image-preview-item';
+    wrapper.dataset.index = index;
+
+    const img = document.createElement('img');
+    img.alt = 'Foods image preview';
+    if (item.file) {
+      img.src = URL.createObjectURL(item.file);
+    } else if (item.imageUrl) {
+      img.src = item.imageUrl;
+    }
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.textContent = 'Remove';
+    removeBtn.addEventListener('click', () => {
+      foodsImagesState.splice(index, 1);
+      renderFoodsImages();
+    });
+
+    wrapper.appendChild(img);
+    wrapper.appendChild(removeBtn);
+    return wrapper;
+  }
+
+  function renderFoodsImages() {
+    if (!foodsImagesPreview) return;
+    foodsImagesPreview.innerHTML = '';
+
+    if (foodsImagesState.length === 0) {
+      foodsImagesPreview.innerHTML = '<p class="hint">No foods images configured yet.</p>';
+      return;
+    }
+
+    foodsImagesState.forEach((item, index) => {
+      const previewItem = createFoodsImagePreview(item, index);
+      foodsImagesPreview.appendChild(previewItem);
+    });
+  }
+
+  function loadFoodsImages(data) {
+    foodsImagesState = Array.isArray(data.foodsImages)
+      ? data.foodsImages.map((item) => ({
+          imageUrl: item.imageUrl || '',
+          imagePublicId: item.imagePublicId || '',
+          file: null,
+        }))
+      : [];
+    renderFoodsImages();
+  }
+
   function appendAboutImagesToForm(formData) {
     formData.delete('aboutImagesData');
     formData.delete('aboutImages');
@@ -263,6 +318,31 @@
     });
 
     formData.set('aboutImagesData', JSON.stringify(items));
+  }
+
+  function appendFoodsImagesToForm(formData) {
+    formData.delete('foodsImagesData');
+    formData.delete('foodsImages');
+
+    const items = [];
+    let fileCounter = 0;
+
+    foodsImagesState.forEach((item) => {
+      const payloadItem = {
+        imageUrl: item.imageUrl || '',
+        imagePublicId: item.imagePublicId || '',
+      };
+
+      if (item.file) {
+        payloadItem.newImageIndex = fileCounter;
+        formData.append('foodsImages', item.file);
+        fileCounter += 1;
+      }
+
+      items.push(payloadItem);
+    });
+
+    formData.set('foodsImagesData', JSON.stringify(items));
   }
 
   function appendSliderItemsToForm(formData) {
@@ -334,6 +414,18 @@
     });
   }
 
+  if (foodsImagesInput) {
+    foodsImagesInput.addEventListener('change', async () => {
+      const files = Array.from(foodsImagesInput.files || []);
+      for (const file of files) {
+        const compressedFile = await prepareUploadFile(file);
+        foodsImagesState.push({ imageUrl: '', imagePublicId: '', file: compressedFile });
+      }
+      foodsImagesInput.value = '';
+      renderFoodsImages();
+    });
+  }
+
   async function loadSettings() {
     try {
       const res = await fetch("/api/settings");
@@ -360,6 +452,7 @@
       }
       loadSliderItems(data);
       loadAboutImages(data);
+      loadFoodsImages(data);
     } catch (err) {
       console.error(err);
       setError("Could not load current settings. You can still fill in the form and save.");
@@ -405,6 +498,7 @@
 
       appendSliderItemsToForm(formData);
       appendAboutImagesToForm(formData);
+      appendFoodsImagesToForm(formData);
       const res = await fetch("/api/settings", {
         method: "PUT",
         headers: { ...authHeaders() },
@@ -441,6 +535,7 @@
         }
         loadSliderItems(data);
         loadAboutImages(data);
+        loadFoodsImages(data);
       } catch (e) {
         // ignore JSON parse errors here — we still show saved indicator
       }

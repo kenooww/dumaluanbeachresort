@@ -17,6 +17,15 @@ const settingsSchema = new mongoose.Schema(
         imagePublicId: { type: String, default: '' },
       },
     ],
+    foodsTitle: { type: String, default: '' },
+    foodsDescription: { type: String, default: '' },
+    foodsDescription2: { type: String, default: '' },
+    foodsImages: [
+      {
+        imageUrl: { type: String, default: '' },
+        imagePublicId: { type: String, default: '' },
+      },
+    ],
     mission: { type: String, default: '' },
     vision: { type: String, default: '' },
     yearEstablished: { type: Number },
